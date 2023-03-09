@@ -1,0 +1,38 @@
+
+.sideBar-toggle .fa-angle-right {
+  display: inline !important;
+}
+.sideToggled {
+  position: fixed;
+top: 265px;
+/* left: 290.5px; */
+left: 9px;
+z-index: 1;
+font-size: 20px;
+line-height: 20px;
+width: 20px;
+height: 65.5px;
+margin-left: -10px;
+color: #0088d1;
+border-left: none;
+background: #fff;
+text-align: center;
+line-height: 64px;
+cursor: pointer;
+
+border-right: .5px solid rgba(0,0,0,.125);
+border-bottom: .5px solid rgba(0,0,0,.125);
+border-top: .5px solid rgba(0,0,0,.125);
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+}
+.navigation-right-icon {
+  position: relative;
+  right: 2.5px;
+  top: -2.5px;
+}
+.navigation-left-icon {
+  position: relative;
+  right: 2.5px;
+  top: -2.5px;
+}

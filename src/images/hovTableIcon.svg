@@ -1,0 +1,13 @@
+<svg version="1.1" id="filter-Table" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;}
+	.st2{ fill: #0088d1;}
+</style>
+<path class='st2' d="M42.4,6.5H5.6C3,6.5,1,8.5,1,11.1v25.8c0,2.5,2,4.6,4.6,4.6h36.8c2.5,0,4.6-2,4.6-4.6V11.1C47,8.5,45,6.5,42.4,6.5z
+	 M45,11.1v6.4H33v-9h9.4C43.8,8.5,45,9.7,45,11.1z M18,28.5v-9h13v9H18z M31,30.5v9H18v-9H31z M18,17.5v-9h13v9H18z M16,19.5v9H3v-9
+	H16z M33,19.5h12v9H33V19.5z M5.6,8.5H16v9H3v-6.4C3,9.7,4.2,8.5,5.6,8.5z M3,36.9v-6.4h13v9H5.6C4.2,39.5,3,38.3,3,36.9z
+	 M42.4,39.5H33v-9h12v6.4C45,38.3,43.8,39.5,42.4,39.5z"/>
+<rect class="st0" width="48" height="48"/>
+</svg>

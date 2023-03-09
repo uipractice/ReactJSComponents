@@ -1,0 +1,11 @@
+.app-logo-header{
+  display: flex;
+}
+.app-logo-header.navbar.fixed-top{
+  background: #023047 !important;
+  z-index: 1000;
+  height: 55px;
+}
+.app-nav-margin {
+  margin-left: 138.5px;
+}

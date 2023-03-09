@@ -1,0 +1,31 @@
+.app-header {
+  display: flex;
+  flex-direction: column;
+  margin-left: 140px;
+  margin-top: 30px;
+  margin-right: 50px;
+}
+.react-logo{
+    height: 100px;
+    width: 100px;
+    margin-left: 20px;
+}
+.react-components-title {
+  margin-top: 40px;
+  font-size: 28px;
+  color: #023047;
+  font-size: 28px;
+  line-height: 25px;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+.app-title {
+  display: flex;
+  flex-direction: row;
+}
+.app-desc {
+  color: #87878d;
+  text-align: left;
+  margin-left: 45px;
+  font-size: 14px;
+}

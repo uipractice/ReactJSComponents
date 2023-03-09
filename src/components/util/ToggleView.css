@@ -1,0 +1,45 @@
+.toggle-demo-sec {
+  position: absolute;
+  right: 6.19%;
+  top: 25%;
+}
+
+.toggleView-btn {
+  color: #5f5f67 !important;
+  background-color: white !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  font-size: 14px;
+  width: 90px;
+  height: 31px;
+  float: left;
+  padding: 4.6px 0 6px;
+  line-height: inherit;
+  border: 1px solid #d7d7d9;
+  border-color: #d7d7d9 !important;
+}
+.toggleView-btn.active{
+  background-color: #ff9b21 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  font-size: 14px;
+  width: 90px;
+  cursor: default;
+  height: 31px;
+  padding: 4.6px 0 6px;
+  float: left;
+  line-height: inherit!important;
+  border: 1px solid #d7d7d9;
+  border-color: #d7d7d9 !important;
+}
+.toggleView-btn.focus{
+  outline: none !important;
+  border-color: #d7d7d9 !important;
+  box-shadow: none !important;
+}
+.toggleAdjust {
+  position: absolute;
+  right: 22%;
+  top: 25%;
+}

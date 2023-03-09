@@ -1,0 +1,10 @@
+.demo-wrapper .dropdown {
+  top: 0;
+  transition: all 0.25s ease-out;
+  transform: none;
+}
+
+a.dropdown-item:hover {
+  color: #735c5c !important;
+  background: #f4e7e7 !important;
+}

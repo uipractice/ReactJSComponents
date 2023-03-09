@@ -1,0 +1,13 @@
+<svg version="1.1" id="progressbar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;}
+	.st2{fill: #0088d1;}
+</style>
+<g>
+	<path class='st2' d="M10.9,19.1v9.8h26.2v-9.8H10.9z M35.5,27.3h-23v-6.6h23V27.3z"/>
+	<path class='st2' d="M14.2,22.4h11.5v3.3H14.2V22.4z"/>
+</g>
+<rect class="st0" width="48" height="48"/>
+</svg>

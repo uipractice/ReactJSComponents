@@ -1,0 +1,13 @@
+<svg version="1.1" id="table-Inline-Edit" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{ fill: #0088d1;}
+</style>
+<rect class="st0" width="48" height="48"/>
+<path class='st1' d="M42.4,1H5.6C3,1,1,3,1,5.6v36.8C1,45,3,47,5.6,47h36.8c2.5,0,4.6-2,4.6-4.6V5.6C47,3,45,1,42.4,1z M13,36v-7h15v7H13z
+	 M28,38v7H13v-7H28z M11,36H3v-7h8V36z M28,20v7H13v-7H28z M30,29h15v7H30V29z M30,27v-7h15v7H30z M3,5.6C3,4.2,4.2,3,5.6,3h36.8
+	C43.8,3,45,4.2,45,5.6V18H3V5.6z M11,20v7H3v-7H11z M3,42.4V38h8v7H5.6C4.2,45,3,43.8,3,42.4z M42.4,45H30v-7h15v4.4
+	C45,43.8,43.8,45,42.4,45z"/>
+<rect class="st1" x="6" y="7" width="3" height="8"/>
+</svg>

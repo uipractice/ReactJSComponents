@@ -1,0 +1,81 @@
+.auto-complete-contanier {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+  display: flex;
+  max-width: 100%;
+  width: 360.594px;
+  pointer-events: auto;
+  top: 31.4583px;
+  left: 864px;
+}
+
+.auto-complete-panel {
+  min-width: 112px;
+  max-width: 280px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  visibility: hidden;
+  max-width: none;
+  max-height: 256px;
+  position: relative;
+  width: 100%;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  background: #fff;
+  color: rgba(0,0,0,.87);
+  visibility: visible;
+}
+
+.auto-option-contanier {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  line-height: 48px;
+  height: 48px;
+  padding: 0 16px;
+  text-align: left;
+  text-decoration: none;
+  max-width: 100%;
+  position: relative;
+  cursor: pointer;
+  outline: 0;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+
+  line-height: 45px!important;
+  height: 30px!important;
+  padding: 20px!important;
+  margin: 0;
+
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-size: 16px;
+  color: rgba(0,0,0,.87);
+}
+.auto-option-contanier:hover, a.auto-text-link:hover {
+  background: #0088d1;
+  color: #fff!important;
+}
+
+
+.auto-option-text {
+  display: inline-block;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auto-text-link {
+  display: block;
+  width: 100%;
+  text-transform: capitalize;
+  color: #040404;
+  font-size: 16px;
+}

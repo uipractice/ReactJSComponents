@@ -1,0 +1,61 @@
+.component-card {
+  display: flex;
+  flex-direction: column;
+  height: 248px;
+  width: 100%;
+  max-width: 270px;
+  border: 0.5px solid rgb(236, 236, 236);
+  margin-left: 40px;
+
+  transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1);
+  padding: 16px;
+  border-radius: 4px;
+	background: #fff;
+  color: rgba(0,0,0,.87);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2);
+}
+.component-card:hover {
+ /* box-shadow: 0 7px 25px 0 rgba(0,0,0,.03), 0 4px 12px 0 rgba(0,0,0,.03), 0 8px 16px 0 rgba(0,0,0,0.2); */
+
+ box-shadow: 0 4px 15px 0 rgba(0,0,0,.03), 0 2px 7px 0 rgba(0,0,0,.03), 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.component-card:hover::after {
+  opacity: 1;
+}
+.component-card:hover .component-title {
+  color: #219ebc!important;
+}
+.compo-logo {
+  height: 40px;
+  position: relative;
+  right: 90px;
+  top: 5px;
+}
+/* svg:hover {
+  fill:#007bff;;
+} */
+.component-title {
+  position: relative;
+  top: 23px;
+  left: 7px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #000!important;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+}
+.component-desc {
+  margin-top: 35px;
+  margin-left: 4px;
+  padding-right: 10px;
+  color: #aba8a8;
+  font-size: 14px;
+  color: #363641;
+  line-height: 24px;
+  letter-spacing: .5px;
+  font-weight: 300;
+  height: 100px;
+  overflow: hidden;
+}

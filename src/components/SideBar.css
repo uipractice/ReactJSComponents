@@ -1,0 +1,24 @@
+@import url('https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css');
+@import url('https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css');
+
+.side-section {
+  border-bottom: none;
+  height: 100%;
+}
+
+.side-bar {
+  width: 250px;
+
+  overflow-y: scroll;
+  display: block;
+  position: fixed;
+  top: 95px;
+  bottom: 0;
+  overflow: auto;
+  border-right: 0.8px solid rgb(234,234,234);
+}
+
+
+.side-bar-collapse {
+  transform: translate3d(-100%,0,0);
+}
