@@ -4,7 +4,37 @@
   transform: none;
 }
 
-a.dropdown-item:hover {
-  color: #735c5c !important;
-  background: #f4e7e7 !important;
+.nav-design .dropdown {
+  position: relative;
+}
+
+.nav-design a.dropdown-item:hover {
+  color: #000 !important;
+  background: #e9ecef !important;
+}
+
+
+.nav-design .navbar .navbar-nav .nav-item div:hover {
+  background-color: #fff !important;
+  border-left: 1px solid #000 !important;
+}
+
+.nav-design .navbar .navbar-nav .nav-item div {
+  padding: 5px 0;
+  border-radius: 6px;
+}
+
+.nav-design .navbar .navbar-nav a {
+  padding: 4px 12px !important;
+  text-transform: capitalize;
+  font-size: 16px !important;
+  font-weight: 400;
+}
+
+.nav-design .navbar .navbar-nav a:hover {
+  background-color: grey;
+}
+
+.nav-links-white .navbar .navbar-nav .dropdown-item {
+  color: #1e1e1e;
 }

@@ -18,7 +18,7 @@ export const RbNavBar = () => {
           responsive light-themed navbar that automatically collapses at the lg
           (large) breakpoint.
         </div>
-        <Container>
+        <Container className='nav-design'>
           <Navbar bg="light" expand="lg">
             <Container>
               <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
@@ -68,7 +68,7 @@ export const RbNavBar = () => {
         </div>
 
         <Container>
-                  <Navbar bg="dark" variant="dark" collapseOnSelect expand="lg">
+          <Navbar bg="dark" variant="dark" collapseOnSelect expand="lg">
             <Container>
               <Navbar.Brand href="#home">
                 <img
@@ -134,7 +134,7 @@ export const RbNavBar = () => {
           Note: You need to provide a breakpoint value to <code>expand</code> in
           order for the Navbar to collapse at all.
         </samp>
-        <Container>
+        <Container className='nav-design nav-links-white'>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
               <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
@@ -144,7 +144,7 @@ export const RbNavBar = () => {
                   <Nav.Link href="#features">Features</Nav.Link>
                   <Nav.Link href="#pricing">Pricing</Nav.Link>
                   <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">
+                    <NavDropdown.Item href="#action/3.1" >
                       Action
                     </NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.2">
@@ -337,7 +337,7 @@ export const RbNavBar = () => {
 </Container>
 </>
 `}
-</code>
+        </code>
         <code className="language-javascript">
           {`);
 }     

@@ -41,3 +41,12 @@
   margin: 1rem 0;
 
 }
+
+/* .dropdown-menu[data-bs-popper] {
+  right: 0;
+  left: auto;
+} */
+
+.MuiInputBase-input {
+  line-height: 24px !important;
+}

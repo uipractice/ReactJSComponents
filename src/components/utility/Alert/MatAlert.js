@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-// import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import IconButton from '@mui/material/IconButton';
@@ -10,23 +10,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Prism from "prismjs";
 import '../../prism.css';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '90%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
-
 function MatAlert() {
   const [open, setOpen] = useState(true);
-  const classes = useStyles();
 
   return (
     <div className='demo-wrapper'>
       <div style={{ marginBottom: '10px' }}><strong>Alert with Trigger Button</strong></div>
-      <div className={classes.root}>
+      <Box sx={{ width: '90%' }}>
         <Collapse in={open}>
           <Alert
             action={
@@ -55,16 +45,16 @@ function MatAlert() {
         >
           Re-open
         </Button>
-      </div>
+      </Box>
       <div style={{ marginTop: '10px' }}><strong>Simple Alerts with four severity levels </strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
+      <Stack sx={{ width: '90%' }} spacing={2}>
         <Alert severity="error">This is an error alert — check it out!</Alert>
         <Alert severity="warning">This is a warning alert — check it out!</Alert>
         <Alert severity="info">This is an info alert — check it out!</Alert>
         <Alert severity="success">This is a success alert — check it out!</Alert>
-      </div>
+      </Stack>
       <div style={{ marginTop: '10px' }}><strong>Alert with <code>AlertTitle</code> component </strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
+      <Stack sx={{ width: '90%' }} spacing={2}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
           This is an error alert — <strong>check it out!</strong>
@@ -81,7 +71,7 @@ function MatAlert() {
           <AlertTitle>Success</AlertTitle>
           This is a success alert — <strong>check it out!</strong>
         </Alert>
-      </div>
+      </Stack>
       <div className='compo-description'>
         <h4>Description</h4>
         <p>An alert displays a short, important message in a way that attracts the user's attention without interrupting the user's task.</p>
