@@ -56,6 +56,7 @@ function MatPopover() {
           aria-haspopup="true"
           onMouseEnter={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
+          sx={{ width: 'fit-content' }}
         >
           Hover with a Popover.
         </Typography>
@@ -161,6 +162,7 @@ function MatPopover(){
         aria-haspopup="true"
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
+        sx={{ width: 'fit-content' }}
       >
         Hover with a Popover.
       </Typography>

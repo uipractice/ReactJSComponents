@@ -18,15 +18,15 @@ function RbPopover() {
 
   return (
     <div className='demo-wrapper'>
-      <div style={{ marginBottom: '30px' }}>Popover on click of trigger button</div>
+      <div style={{ marginBottom: '10px' }}>Popover on click of trigger button</div>
       <OverlayTrigger rootClose trigger="click" placement="right" overlay={popover}>
         <Button variant="success">Click me to see</Button>
       </OverlayTrigger>
-      <div style={{ marginBottom: '30px', marginTop: '10px' }}>Popover on hover of trigger button</div>
+      <div style={{ marginBottom: '10px', marginTop: '20px' }}>Popover on hover of trigger button</div>
       <OverlayTrigger rootClose trigger={['hover', 'focus']} placement="right" overlay={popover}>
         <Button variant="warning">hover me to see</Button>
       </OverlayTrigger>
-      <div style={{ marginBottom: '30px', marginTop: '10px' }}>Popover at various positions(onClick).</div>
+      <div style={{ marginBottom: '10px', marginTop: '20px' }}>Popover at various positions(onClick).</div>
 
       {['top', 'right', 'bottom', 'left'].map((placement) => (
         <OverlayTrigger
@@ -86,18 +86,18 @@ function RbPopover() {
   );
 
   return (`}
-  </code>
-  <code className='language-markup'>{`
+        </code>
+        <code className='language-markup'>{`
     <div className='demo-wrapper'>
-      <div style={{ marginBottom: '30px' }}>Popover on click of trigger button</div>
+      <div style={{ marginBottom: '10px' }}>Popover on click of trigger button</div>
       <OverlayTrigger rootClose trigger="click" placement="right" overlay={popover}>
         <Button variant="success">Click me to see</Button>
       </OverlayTrigger>
-      <div style={{ marginBottom: '30px', marginTop: '10px' }}>Popover on hover of trigger button</div>
+      <div style={{ marginBottom: '10px', marginTop: '20px' }}>Popover on hover of trigger button</div>
       <OverlayTrigger rootClose trigger={['hover', 'focus']} placement="right" overlay={popover}>
         <Button variant="warning">hover me to see</Button>
       </OverlayTrigger>
-      <div style={{ marginBottom: '30px', marginTop: '10px' }}>Popover at various positions(onClick).</div>
+      <div style={{ marginBottom: '10px', marginTop: '20px' }}>Popover at various positions(onClick).</div>
 
       {['top', 'right', 'bottom', 'left'].map((placement) => (
         <OverlayTrigger
@@ -120,8 +120,8 @@ function RbPopover() {
       ))}
     </div>
   `}
-  </code>
-  <code className='language-javascript'>
+        </code>
+        <code className='language-javascript'>
           {`
 );
 export default RbPopover;
