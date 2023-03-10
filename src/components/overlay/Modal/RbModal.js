@@ -78,10 +78,12 @@ function VerticalModal() {
     </>
   );
 }
+
 function RbModal() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
   return (
     <div className='demo-wrapper'>
       <div style={{ marginBottom: '10px' }}>Modal with Animation</div>
@@ -135,16 +137,80 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Example() {
+function ModalWithOutAnim() {
   const [show, setShow] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  return (`}</code><code className="language-markup">{`
+  <>
+      <Button variant="secondary" onClick={handleShow}>
+        Launch demo modal w/o Anim
+      </Button>
+
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>`}</code><code className="language-javascript">
+          {`  );
+}
+
+function VerticallyMiddleModal(props) {
+  return (`}</code><code className="language-markup">{`
+    <>
+      <Button variant="primary" onClick={() => setModalShow(true)}>
+        Launch vertically centered modal
+      </Button>
+
+      <VerticallyMiddleModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
+    </>`}</code><code className="language-javascript">{`
+    );
+}
+
+function VerticalModal() {
+  const [modalShow, setModalShow] = useState(false);
+
+  return (`}</code><code className="language-markup">{`
+    <>
+      <Button variant="primary" onClick={() => setModalShow(true)}>
+        Launch vertically centered modal
+      </Button>
+
+      <VerticallyMiddleModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
+    </>`}</code><code className="language-javascript">
+          {`  );
+}
+
+function RbModal() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  
   return (`}</code>
         <code className='language-markup'>{`
+  <div className='demo-wrapper'>
+  <div style={{ marginBottom: '10px' }}>Modal with Animation</div>
   <>
     <Button variant="primary" onClick={handleShow}>
-    Launch demo modal
+      Launch demo modal with Anim
     </Button>
 
     <Modal show={show} onHide={handleClose}>
@@ -161,11 +227,17 @@ function Example() {
         </Button>
       </Modal.Footer>
     </Modal>
-  </>`}</code>
+  </>
+  <div style={{ marginBottom: '10px', marginTop: '10px' }}>Modal with out animation</div>
+    <ModalWithOutAnim />
+  <div style={{ marginBottom: '10px', marginTop: '10px' }}>Vertically Centered Modal</div>
+    <VerticalModal />
+  </div>`}</code>
         <code className='language-javascript'>{`
   );
 }
-export default Example;`}</code>
+
+export default RbModal;`}</code>
       </pre>
     </div>
   );

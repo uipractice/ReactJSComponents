@@ -199,8 +199,10 @@ function MatModal() {
       <div style={{ marginTop: '10px' }}><strong>Modal with slide-in transition</strong></div><br />
       <TransitionsModal />
     </div>
-);
+  );
 }
+
+export default MatModal;
   `}</code>
       </pre>
     </div>
