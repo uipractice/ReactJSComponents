@@ -6,7 +6,6 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import '../../prism.css';
-import './RbDropdown.scss';
 
 
 function RbDropdown() {
@@ -78,13 +77,10 @@ function RbDropdownCode() {
         <code className='language-javascript'>{`      
 import React, from 'react';
 import uuid from 'react-uuid';
-import Prism from "prismjs";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import '../../prism.css';
-import './RbDropdown.scss';
 
 
 function RbDropdown() {
