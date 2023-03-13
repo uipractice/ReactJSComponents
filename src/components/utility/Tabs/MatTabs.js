@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import TabsWrappedLabel from './WrappedLabels';
 import DisabledTabs from './MatDisabledTabs';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, Typography, Box } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
 import Prism from "prismjs";
 import '../../prism.css';
 
@@ -41,15 +44,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 function MatTabs() {
-  const classes = useStyles();
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -58,30 +53,30 @@ function MatTabs() {
   return (
     <div className='demo-wrapper'>
       <div><strong>Simple Tabs</strong></div>
-      <div style={{ padding: '24px', background: '#f5f5f5', textAlign: 'center' }}>
-        <div className={classes.root} style={{ marginTop: '10px' }}>
+      <Box sx={{ width: '80%', padding: '24px' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="Item One" {...a11yProps(0)} />
             <Tab label="Item Two" {...a11yProps(1)} />
             <Tab label="Item Three" {...a11yProps(2)} />
           </Tabs>
-          <TabPanel value={value} index={0}>
-            Item One
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            Item Two
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Item Three
-          </TabPanel>
-        </div>
-      </div>
+        </Box>
+        <TabPanel value={value} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          Item Two
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+      </Box>
       <div style={{ marginTop: '10px' }}><strong>Tabs Wrapped Labels(Long labels will be automatically wrapped)</strong></div>
-      <div style={{ padding: '24px', background: '#f5f5f5', textAlign: 'center' }}>
+      <div style={{ padding: '24px' }}>
         <TabsWrappedLabel />
       </div>
       <div style={{ marginTop: '10px' }}><strong>Disabled Tabs</strong></div>
-      <div style={{ padding: '24px', background: '#f5f5f5', textAlign: 'center' }}>
+      <div style={{ padding: '24px' }}>
         <DisabledTabs />
       </div>
       <div className='compo-description'>
@@ -107,8 +102,11 @@ function MatTabsCode() {
         <code className='language-javascript'>{`
 import TabsWrappedLabel from './WrappedLabels';
 import DisabledTabs from './MatDisabledTabs';
-import { Tabs, Tab, Typography, Box } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -117,8 +115,8 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={simple-tabpanel-{index}}
-      aria-labelledby={simple-tab-{index}}
+      id={\`simple-tabpanel-\${index}\`}
+      aria-labelledby={\`simple-tab-\${index}\`}
       {...other}
     >
       {value === index && (
@@ -138,60 +136,98 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: simple-tab-{index},
-    'aria-controls': simple-tabpanel-{index},
+    id: \`simple-tab-\${index}\`,
+    'aria-controls': \`simple-tabpanel-\${index}\`,
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 function MatTabs() {
-  const classes = useStyles();
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (`}</code><code className='language-markup'>{`
-          <div className='demo-wrapper'>
-          <div><strong>Simple Tabs</strong></div>
-          <div style={{padding:'24px', background:'#f5f5f5', textAlign: 'center'}}>
-            <div className={classes.root} style={{marginTop:'10px'}}>
-              <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                  <Tab label="Item One" {...a11yProps(0)} />
-                  <Tab label="Item Two" {...a11yProps(1)} />
-                  <Tab label="Item Three" {...a11yProps(2)} />
-                </Tabs>
-              </AppBar>
-              <TabPanel value={value} index={0}>
-                Item One
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                Item Two
-              </TabPanel>
-              <TabPanel value={value} index={2}>
-                Item Three
-              </TabPanel>
-            </div>
-          </div>
-          <div style={{marginTop:'10px'}}><strong>Tabs Wrapped Labels(Long labels will be automatically wrapped)</strong></div>
-          <div style={{padding:'24px', background:'#f5f5f5', textAlign: 'center'}}>
-            <TabsWrappedLabel/>
-          </div>
-          <div style={{marginTop:'10px'}}><strong>Disabled Tabs</strong></div>
-          <div style={{padding:'24px', background:'#f5f5f5', textAlign: 'center'}}>
-            <DisabledTabs/>
-          </div>
-        </div>`}</code><code className='language-javascript'>{`
+    <div className='demo-wrapper'>
+      <div><strong>Simple Tabs</strong></div>
+      <Box sx={{ width: '80%', padding: '24px' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            <Tab label="Item One" {...a11yProps(0)} />
+            <Tab label="Item Two" {...a11yProps(1)} />
+            <Tab label="Item Three" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          Item Two
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+      </Box>
+      <div style={{marginTop:'10px'}}><strong>Tabs Wrapped Labels(Long labels will be automatically wrapped)</strong></div>
+      <div style={{padding:'24px'}}>
+        <TabsWrappedLabel/>
+      </div>
+      <div style={{marginTop:'10px'}}><strong>Disabled Tabs</strong></div>
+      <div style={{padding:'24px'}}>
+        <DisabledTabs/>
+      </div>
+    </div>`}</code><code className='language-javascript'>{`
   );
-}export default MatTabs;`}
-        </code>
+}
+
+export default MatTabs;
+
+<==================WrappedLabels.js=====================>
+
+export default function TabsWrappedLabel() {
+  const [value, setValue] = React.useState('one');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (`}</code><code className="language-markup">{`
+  <Box sx={{ width: '100%' }}>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="wrapped label tabs example"
+      >
+        <Tab
+          value="one"
+          label="New Arrivals in the Longest Text of Nonfiction that should appear in the next line"
+          wrapped
+        />
+        <Tab value="two" label="Item Two" />
+        <Tab value="three" label="Item Three" />
+      </Tabs>
+    </Box>
+  
+  `}</code><code className="language-javascript">{`);
+}
+
+<=================MatDisabledTabs.js=======================>
+
+export default function DisabledTabs() {
+  const [value, setValue] = React.useState(2);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (`}</code><code className="language-markup">{`
+    <Tabs value={value} onChange={handleChange} aria-label="disabled tabs example">
+      <Tab label="Active" />
+      <Tab label="Disabled" disabled />
+      <Tab label="Active" />
+    </Tabs>`}</code><code className="language-javascript">
+          {`);
+}`}</code>
       </pre>
     </div>
   );
