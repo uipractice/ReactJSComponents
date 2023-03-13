@@ -50,3 +50,8 @@
 .MuiInputBase-input {
   line-height: 22px !important;
 }
+
+.active.page-item a {
+  background-color: #007bff !important;
+  color: #fff !important;
+}
