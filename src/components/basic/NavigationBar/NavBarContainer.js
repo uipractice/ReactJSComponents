@@ -5,21 +5,20 @@ import AppBreadcrumbs from '../../AppBreadcrumbs';
 import SideBar from '../../SideBar';
 import Header from '../../Header';
 import Footer from '../../Footer';
-import '../Button/ButtonContainer.css';
 import '../../../App.css';
 
 function NavBarContainer() {
-  const [ expandView, setExpandView ] = useState(false);
+  const [expandView, setExpandView] = useState(false);
   const handleToggleSidebar = (value) => setExpandView(!value);
-  const classes = classNames('App', { appExpand: expandView});
+  const classes = classNames('App', { appExpand: expandView });
 
   return (
     <>
       <Header />
-      <AppBreadcrumbs compoName='NavBar'/>
+      <AppBreadcrumbs compoName='NavBar' />
       <div className={classes}>
         <div className='side-bar'>
-          <SideBar onToggleSidebar={handleToggleSidebar}/>
+          <SideBar onToggleSidebar={handleToggleSidebar} />
         </div>
         <NavBarComponent isViewResized={expandView} />
       </div>

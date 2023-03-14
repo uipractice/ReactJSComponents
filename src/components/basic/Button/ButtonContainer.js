@@ -5,13 +5,12 @@ import AppBreadcrumbs from '../../AppBreadcrumbs';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import SideBar from '../../SideBar';
-import './ButtonContainer.css';
 import '../../../App.css';
 
 function ButtonContainer() {
-  const [ expandView, setExpandView ] = useState(false);
+  const [expandView, setExpandView] = useState(false);
   const handleToggleSidebar = (value) => setExpandView(!value);
-  const classes = classNames('App', { appExpand: expandView});
+  const classes = classNames('App', { appExpand: expandView });
   // const isBasicOpen = JSON.parse(localStorage.getItem('isBasicOpen'));
   // const isUtilOpen = JSON.parse(localStorage.getItem('isUtilOpen'));
   // const isOverlayOpen = JSON.parse(localStorage.getItem('isOverlayOpen'));
@@ -19,14 +18,14 @@ function ButtonContainer() {
   return (
     <>
       <Header />
-      <AppBreadcrumbs compoName='Button'/>
+      <AppBreadcrumbs compoName='Button' />
       <div className={classes}>
         <div className='side-bar'>
-          <SideBar 
+          <SideBar
             onToggleSidebar={handleToggleSidebar}
           />
         </div>
-        <ButtonComponent isViewResized={expandView}/>
+        <ButtonComponent isViewResized={expandView} />
       </div>
       <Footer />
     </>
