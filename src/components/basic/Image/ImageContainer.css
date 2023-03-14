@@ -1,24 +1,26 @@
- .rounded{
+.mat-rounded {
+    display: inline-block;
+    border-radius: 8px;
     width: 100px;
     height: 100px;
     border: solid 3px #191919;
-    display: inline-block;
-    border-radius: 8px;
-
 }
-.roundedCircle{
+
+.roundedCircle {
     width: 100px;
     height: 100px;
     border: solid 3px #131212;
     display: inline-block;
     border-radius: 50%;
 }
-.thumbnail{
+
+.thumbnail {
     border: 1px solid #0b0b0b;
     padding: 5px;
     width: 150px;
 }
-.fluid{
+
+.fluid {
     width: 450px;
     height: 200px;
     border: solid 3px #191919;
