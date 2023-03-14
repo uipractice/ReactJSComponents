@@ -39,13 +39,8 @@
   display: flex;
   gap: 1rem;
   margin: 1rem 0;
-
+  align-items: center;
 }
-
-/* .dropdown-menu[data-bs-popper] {
-  right: 0;
-  left: auto;
-} */
 
 .MuiInputBase-input {
   line-height: 22px !important;
