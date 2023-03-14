@@ -117,7 +117,6 @@ const Alert = forwardRef(function Alert(props, ref) {
 function MatToast(){
   const [open, setOpen] = useState(false);
   const [cusopen, setCusopen] = useState(false);
-  const classes = useStyles();
 
   const handleClick = () => {
     setOpen(true);
