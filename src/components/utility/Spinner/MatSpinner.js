@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-// import CircularProgress from '@material-ui/core/CircularProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
 import Button from '@mui/material/Button';
@@ -8,20 +6,11 @@ import Fab from '@mui/material/Fab';
 import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Prism from "prismjs";
 import '../../prism.css';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    '& > * + *': {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
-
 function MatSpinner() {
-  const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const timer = useRef();
@@ -54,15 +43,17 @@ function MatSpinner() {
   return (
     <div className='demo-wrapper'>
       <div><strong>Default spinners with color variants</strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
-        <CircularProgress />
-        <CircularProgress color="secondary" />
-        <CircularProgress color="success" />
-        <CircularProgress color="error" />
-        <CircularProgress color="warning" />
+      <div style={{ marginTop: '10px' }}>
+        <Stack direction="row" spacing={2}>
+          <CircularProgress />
+          <CircularProgress color="secondary" />
+          <CircularProgress color="success" />
+          <CircularProgress color="error" />
+          <CircularProgress color="warning" />
+        </Stack>
       </div>
       <div><strong>Interactive integration (with buttons, etc.)</strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
+      <div style={{ marginTop: '10px' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ m: 1, position: 'relative' }}>
             <Fab
@@ -134,7 +125,6 @@ function MatSpinnerCode() {
       <h4>React Material UI code</h4>
       <pre style={{ marginRight: '20px', background: '#fff' }}>
         <code className='language-javascript'>{`
-import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
 import Button from '@mui/material/Button';
@@ -142,15 +132,6 @@ import Fab from '@mui/material/Fab';
 import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    '& > * + *': {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
 
 function MatSpinner() {
   const classes = useStyles();
@@ -187,15 +168,15 @@ function MatSpinner() {
         `}</code><code className='language-markup'>{`
         <div className='demo-wrapper'>
       <div><strong>Default spinners with color variants</strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
+      <Stack direction="row" spacing={2}>
         <CircularProgress />
         <CircularProgress color="secondary" />
         <CircularProgress color="success" />
         <CircularProgress color="error" />
         <CircularProgress color="warning" />
-      </div>
+      </Stack>
       <div><strong>Interactive integration (with buttons, etc.)</strong></div>
-      <div className={classes.root} style={{ marginTop: '10px' }}>
+      <div style={{ marginTop: '10px' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ m: 1, position: 'relative' }}>
             <Fab
