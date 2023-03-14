@@ -109,20 +109,10 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert from '@mui/material/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '90%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
 
 function MatToast(){
   const [open, setOpen] = useState(false);
@@ -182,7 +172,7 @@ function MatToast(){
       />
     </div>
     <div><strong>Customized Toast</strong></div>
-    <div className={classes.root} style={{marginTop:'10px'}}>
+    <div style={{marginTop:'10px'}}>
       <Button variant="outlined" onClick={handleCusClick}>
         Open success Toast
       </Button>
