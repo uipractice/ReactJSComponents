@@ -12,7 +12,7 @@ export const RbListGroup = () => {
     <>
       <div className="demo-wrapper">
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <hr />
+          <br />
           List Groups with Active , disabled items and Actionable Items{" "}
         </div>
 
@@ -37,8 +37,8 @@ export const RbListGroup = () => {
           </ListGroup.Item>
         </ListGroup>
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <hr />
-          #Flush - Add the flush variant to remove outer borders and rounded
+          <br />
+          Flush - Add the flush variant to remove outer borders and rounded
           corners to render list group items edge-to-edge in a parent container
           such as a Card.
         </div>
@@ -60,8 +60,8 @@ export const RbListGroup = () => {
         </ListGroup>
 
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <hr />
-          #Numbered- Add the numbered prop to opt into numbered list group
+          <br />
+          Numbered- Add the numbered prop to opt into numbered list group
           items. Numbers are generated via CSS (as opposed to a ordered list
           ol's default browser styling)for better placement inside list group
           items and to allow for better customization.

@@ -49,7 +49,7 @@ export const MatListGroup = () => {
       <div className="demo-wrapper">
         {/* Basic List  */}
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <h5>Basic List </h5>- The last item of the below demo shows how you
+          <h5>Basic List </h5>The last item of the below demo shows how you
           can render a link:
         </div>
         <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
@@ -90,7 +90,7 @@ export const MatListGroup = () => {
           </nav>
         </Box>
 
-        <hr />
+        <br />
         {/* Nested List */}
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
           <h5>Nested List</h5>{" "}
@@ -131,7 +131,7 @@ export const MatListGroup = () => {
           </Collapse>
         </List>
 
-        <hr />
+        <br />
 
         {/* Selected List Item */}
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
@@ -176,10 +176,10 @@ export const MatListGroup = () => {
           </List>
         </Box>
 
-        <hr />
+        <br />
         {/* CheckList Item */}
         <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <h5>CheckList Item </h5> - The checkbox is the primary action and the
+          <h5>CheckList Item </h5>The checkbox is the primary action and the
           state indicator for the list item. The comment button is a secondary
           action and a separate target.
         </div>
@@ -437,7 +437,7 @@ const handleToggle = (value) => () => {
         </List>
       </Collapse>
     </List>
-<hr/>
+<br/>
 
 
 {/* CheckList Item */}
