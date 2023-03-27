@@ -29,7 +29,6 @@ import FilterTableContainer from './components/tables/FilterTable/FilterTableCon
 import PaginationTableContainer from './components/tables/PaginationTable/PaginationTableContainer';
 import SortableTableContainer from './components/tables/SortableTable/SortableTableContainer';
 import AccordionContainer from './components/utility/Accordion/AccordionContainer';
-import CarouselsContainer from './components/utility/Carousels/CarouselsContainer';
 import ProgressContainer from './components/utility/Progress/ProgressContainer';
 import CardsContainer from './components/utility/Cards/CardsContainer';
 import PaginationContainer from './components/utility/Pagination/PagninationContainer';
@@ -46,8 +45,8 @@ const routing = (
       <Route path='/radioButton' component={RadioButtonContainer} />
       <Route path='/dropdown' component={DropDownContainer} />
       <Route path='/image' component={ImageContainer} />
-      <Route path='/listgroup'component={ListGroupContainer}/>
-      <Route path='/navigationbar' component={NavBarContainer}/>
+      <Route path='/listgroup' component={ListGroupContainer} />
+      <Route path='/navigationbar' component={NavBarContainer} />
       <Route path='/tooltip' component={TooltipContainer} />
       <Route path='/popover' component={PopoverContainer} />
       <Route path='/modal' component={ModalContainer} />
@@ -64,7 +63,6 @@ const routing = (
       <Route path='/sortabletable' component={SortableTableContainer} />
       <Route path='/accordion' component={AccordionContainer} />
       <Route path='/breadcrumbs' component={BreadcrumbsContainer} />
-      <Route path='/carousels' component={CarouselsContainer} />
       <Route path='/progress' component={ProgressContainer} />
       <Route path='/cards' component={CardsContainer} />
       <Route path='/pagination' component={PaginationContainer} />

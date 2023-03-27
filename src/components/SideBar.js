@@ -171,11 +171,6 @@ function SideBar(props) {
                 </details>
                 <details className="details">
                   <summary className="summary summary1">
-                    <NavLink to='/carousels' style={{ textDecoration: 'none' }}>Carousels</NavLink>
-                  </summary>
-                </details>
-                <details className="details">
-                  <summary className="summary summary1">
                     <NavLink to='/progress' style={{ textDecoration: 'none' }}>Progress</NavLink>
                   </summary>
                 </details>
