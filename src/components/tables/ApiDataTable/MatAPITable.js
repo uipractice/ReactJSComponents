@@ -1,61 +1,111 @@
-import React, { useEffect } from "react";
-import MaterialTable from "@material-table/core";
+import React, { useEffect, useMemo, useState } from "react";
+import MaterialReactTable from "material-react-table";
 import Prism from "prismjs";
 import "../../prism.css";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { ApiDataTableFetch } from "../../services/ApiDataTableFetch";
 
 const MatAPITable = () => {
-  const columns = [
-    { title: "ID", field: "id" },
-    { title: "Name", field: "name" },
-    { title: "UserName", field: "username" },
-    { title: "Email", field: "email" },
-  ];
+  const columns =
+    useMemo(() =>
+      [
+        { header: "ID", accessorKey: "id" },
+        { header: "Email", accessorKey: "email" },
+        { header: "First Name", accessorKey: "first_name" },
+        { header: "Last Name", accessorKey: "last_name" }
+      ],
+      [],);
 
-  const { data, error } = ApiDataTableFetch(
-    "https://jsonplaceholder.typicode.com/users"
-  );
+  const [data, setData] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
+  const [rowCount, setRowCount] = useState(0);
 
-  if (error) {
-    return error.message;
-  }
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!data.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
+      }
+
+      const url = 'https://reqres.in/api/users?page=2'
+
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log(json.data);
+        setData(json.data);
+      } catch (error) {
+        setIsError(true);
+        console.error(error);
+        return;
+      }
+      setIsError(false);
+      setIsLoading(false);
+      setIsRefetching(false);
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    columnFilters,
+    globalFilter,
+    pagination.pageIndex,
+    pagination.pageSize,
+    sorting,
+  ]);
+
   return (
     <div className="demo-wrapper">
       <div style={{ marginBottom: "10px" }}>
         Table with Dynamically fetched data from 3rd party API
       </div>
       <div style={{ marginRight: "10px" }}>
-        {data ? (
-          <MaterialTable
-            options={{
-              paging: false,
-              search: false,
-              headerStyle: {
-                backgroundColor: '#01579b',
-                color: '#FFF'
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          enableTopToolbar={true}
+          enableSorting={false}
+          enableRowSelection={false}
+          getRowId={(row) => row.id}
+          manualFiltering
+          manualPagination
+          manualSorting
+          muiToolbarAlertBannerProps={
+            isError
+              ? {
+                color: 'error',
+                children: 'Error loading data',
               }
-
-            }}
-            columns={columns}
-            data={data}
-            title="Employee Data"
-            striped
-            bordered
-            hover
-          ></MaterialTable>
-        ) : (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        )}
+              : undefined
+          }
+          onColumnFiltersChange={setColumnFilters}
+          onGlobalFilterChange={setGlobalFilter}
+          onPaginationChange={setPagination}
+          onSortingChange={setSorting}
+          rowCount={rowCount}
+          state={{
+            columnFilters,
+            globalFilter,
+            isLoading,
+            pagination,
+            showAlertBanner: isError,
+            showProgressBars: isRefetching,
+            sorting,
+          }}
+        />
       </div>
       <div className="compo-description">
         <h4>Description</h4>
         <p>
-          API Data Table, with the dynamically fetched data (Employee Data) from
-          3rd party API
+          API Data Table, with dynamically fetched data from a 3rd party API.
         </p>
         <h5>Steps</h5>
         <ul>
@@ -63,17 +113,13 @@ const MatAPITable = () => {
             <strong>Step 1 :</strong> Install Dependency in your project root
             folder :{" "}
             <code>
-              npm install @material-ui/core @material-ui/lab
-              @material-table/core --save-dev
+              npm install material-react-table
             </code>
           </li>
           <li>
             <strong>Step 2 :</strong> Import component in view where ever its
             necessary:{" "}
-            <code>{`import MaterialTable from 'material-table/core';`}</code>
-            <br />
-            And for LoadingButton :
-            <code>{`import CircularProgress from "@mui/material/CircularProgress";`}</code>{" "}
+            <code>{`import MaterialReactTable from 'material-react-table';`}</code>
             <br />
           </li>
           <li>
@@ -93,83 +139,113 @@ const MatAPITableCode = () => {
     <div className="jsx-code-wrapper">
       <h4>React Material-UI code</h4>
       <pre style={{ marginRight: "20px", background: "#fff" }}>
-        <code className="language-javascript">{` <=======MatAPITable.js=======>
+        <code className="language-javascript">{`
+import React, { useEffect, useMemo, useState } from "react";
+import MaterialReactTable from "material-react-table";
 
-import React from "react";
-import MaterialTable from "@material-table/core";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { ApiDataTableFetch } from "../../services/ApiDataTableFetch";
+const MatAPITable = () => {
+  const columns =
+    useMemo(() =>
+      [
+        { header: "ID", accessorKey: "id" },
+        { header: "Email", accessorKey: "email" },
+        { header: "First Name", accessorKey: "first_name" },
+        { header: "Last Name", accessorKey: "last_name" }
+      ],
+      [],);
 
-export const MatAPITable = () => {
-  const columns = [
-    { title: "ID", field: "id" },
-    { title: "Name", field: "name" },
-    { title: "UserName", field: "username" },
-    { title: "Email", field: "email" },
-  ];
-  
-  const {data,error} =  ApiDataTableFetch('https://jsonplaceholder.typicode.com/users')
+  const [data, setData] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
+  const [rowCount, setRowCount] = useState(0);
 
-  if(error){
-    return((error.message))
-  }
-  return (
-`}</code>{" "}
-        <code className="language-markup">{`<> {data ? (
-          <MaterialTable
-          options={{
-            paging: false,
-            search: false,
-              headerStyle: {
-              backgroundColor: '#01579b',
-              color: '#FFF' }
-              
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!data.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
+      }
+
+      const url = 'https://reqres.in/api/users?page=2'
+
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log(json.data);
+        setData(json.data);
+      } catch (error) {
+        setIsError(true);
+        console.error(error);
+        return;
+      }
+      setIsError(false);
+      setIsLoading(false);
+      setIsRefetching(false);
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    columnFilters,
+    globalFilter,
+    pagination.pageIndex,
+    pagination.pageSize,
+    sorting,
+  ]);
+
+  return (`}</code>{" "}
+        <code className="language-markup">{`
+    <div className="demo-wrapper">
+      <div style={{ marginBottom: "10px" }}>
+        Table with Dynamically fetched data from 3rd party API
+      </div>
+      <div style={{ marginRight: "10px" }}>
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          enableTopToolbar={true}
+          enableSorting={false}
+          enableRowSelection={false}
+          getRowId={(row) => row.id}
+          initialState={{ showColumnFilters: true }}
+          manualFiltering
+          manualPagination
+          manualSorting
+          muiToolbarAlertBannerProps={
+            isError
+              ? {
+                color: 'error',
+                children: 'Error loading data',
+              }
+              : undefined
+          }
+          onColumnFiltersChange={setColumnFilters}
+          onGlobalFilterChange={setGlobalFilter}
+          onPaginationChange={setPagination}
+          onSortingChange={setSorting}
+          rowCount={rowCount}
+          state={{
+            columnFilters,
+            globalFilter,
+            isLoading,
+            pagination,
+            showAlertBanner: isError,
+            showProgressBars: isRefetching,
+            sorting,
           }}
-            columns={columns}
-            data={data}
-            title="Employee Data"
-            striped
-            bordered
-            hover
-          ></MaterialTable>
-        ) : (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        )}
-</>)
-`}</code>
-        <code className="language-javascript">
-          {`
-
-<=======ApiDataFetch.js=======>
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const ApiDataTableFetch = (url)=> {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] =  useState(null);
-
-    useEffect(() => {
-        setLoading(true);
-        axios.get(url)
-        .then((res)=>{
-            setData(res.data)
-        })
-        .catch((err)=>{
-            setError(err)
-        })
-        .finally(()=>{
-            setLoading(false);
-        })
-    },[url]);
-    return {data,loading, error}
-}
-export {ApiDataTableFetch}`}
-        </code>
+        />
+      </div>`}</code><code className="language-javascript">{`
+  );
+};`}</code>
       </pre>
     </div>
   );
