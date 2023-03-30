@@ -1,61 +1,88 @@
-import React, { useEffect } from "react";
-import MaterialTable from "@material-table/core";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { ApiDataTableFetch } from "../../services/ApiDataTableFetch";
+import React, { useEffect, useMemo } from "react";
+import MaterialReactTable from 'material-react-table'
 import Prism from "prismjs";
 import "../../prism.css";
 
 export const MatFilterTable = () => {
 
-  const columns = [
-    { title: "id", field: "id" },
-    { title: "Name", field: "name" },
-    { title: "Username", field: "username" },
-    { title: "Email", field: "email" },
-  ];
-
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  //   Prism.highlightAll();
-  //   if (!data.length)
-  //     fetch("https://jsonplaceholder.typicode.com/users")
-  //       .then((response) => response.json())
-  //       .then((result) => {
-  //         setData(result);
-  //       });
-  // });
-  const { data, error } = ApiDataTableFetch(
-    "https://jsonplaceholder.typicode.com/users"
+  const columns = useMemo(() => [
+    { header: "ID", accessorKey: "id" },
+    { header: "Name", accessorKey: "name" },
+    { header: "Username", accessorKey: "username" },
+    { header: "Email", accessorKey: "email" },
+  ],
+    [],
   );
-  if (error) {
-    return error.message;
-  }
+
+  const data = useMemo(() => [
+    {
+      "id": 1,
+      "name": "Leanne Graham",
+      "username": "Bret",
+      "email": "Sincere@april.biz",
+    },
+    {
+      "id": 2,
+      "name": "Ervin Howell",
+      "username": "Antonette",
+      "email": "Shanna@melissa.tv",
+    },
+    {
+      "id": 3,
+      "name": "Clementine Bauch",
+      "username": "Samantha",
+      "email": "Nathan@yesenia.net",
+    },
+    {
+      "id": 4,
+      "name": "Patricia Lebsack",
+      "username": "Karianne",
+      "email": "Julianne.OConner@kory.org",
+    },
+    {
+      "id": 5,
+      "name": "Chelsey Dietrich",
+      "username": "Kamren",
+      "email": "Lucio_Hettinger@annie.ca",
+    },
+    {
+      "id": 6,
+      "name": "Mrs. Dennis Schulist",
+      "username": "Leopoldo_Corkery",
+      "email": "Karley_Dach@jasper.info",
+    },
+    {
+      "id": 7,
+      "name": "Kurtis Weissnat",
+      "username": "Elwyn.Skiles",
+      "email": "Telly.Hoeger@billy.biz",
+    },
+
+  ],
+    [],
+  );
+
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginRight: "20px" }}>
-          {data ? (
-            <MaterialTable
-              title="Filtering Table (Based on user inputs)"
-              columns={columns}
-              data={data}
-              options={{
-                filtering: true,
-              }}
-            />
-          ) : (
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          )}
-        </div>
-
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          initialState={{ showColumnFilters: true }}
+          enableColumnActions={true}
+          enableColumnFilters={true}
+          enablePagination={true}
+          enableSorting={false}
+          enableBottomToolbar={true}
+          enableTopToolbar={false}
+          muiTableBodyRowProps={{ hover: false }}
+          muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
+        />
         <div className="compo-description">
           <h4>Description</h4>
           <p>
             Filter Table Component, in which data can be filtered based on user
-            inputs for each columns
+            inputs for each column.
           </p>
           <h5>Steps</h5>
           <ul>
@@ -63,21 +90,13 @@ export const MatFilterTable = () => {
               <strong>Step 1 :</strong> Install Dependency to your project root
               folder :{" "}
               <code>
-                npm install @material-ui/core @material-ui/lab
-                @material-table/core --save-dev
+                npm install material-react-table
               </code>
-              <br />
-              Add Font Icons Dependency to your root html file{" "}
-              <code>{`<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>`}</code>
             </li>
             <li>
               <strong>Step 2 :</strong> Import component in view where ever its
               necessary:{" "}
-              <code>{`import MaterialTable from 'material-table/core';`}</code>
-              <br />
-              And for LoadingButton :
-              <code>{`import CircularProgress from "@mui/material/CircularProgress";`}</code>{" "}
-              <br />
+              <code>{`import MaterialReactTable from 'material-react-table';`}</code>
             </li>
             <li>
               <strong>Step 3 :</strong> Refer React-Material code under the 'Code' tab, to
@@ -89,7 +108,7 @@ export const MatFilterTable = () => {
     </>
   );
 };
-// Code Component
+
 export const MatFilterTableCode = () => {
   useEffect(() => Prism.highlightAll(), []);
   return (
@@ -97,93 +116,88 @@ export const MatFilterTableCode = () => {
       <h4>React Material UI code</h4>
       <pre style={{ marginRight: "20px", background: "#fff" }}>
         <code className="language-javascript">{`
-import React, { useState, useEffect } from "react";
-import MaterialTable from "@material-table/core";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { ApiDataTableFetch } from "../../services/ApiDataTableFetch";
-import Prism from "prismjs";
-import "../../prism.css";
+import React, { useEffect, useMemo } from "react";
+import MaterialReactTable from 'material-react-table'
 
 export const MatFilterTable = () => {
-  const [ data, setData] = useState([]);
-    
-    const columns = [
-        { title: 'id', field: 'id' },
-        { title: 'Name', field: 'name' },
-        { title: 'Username', field: 'username'},
-        { title: 'Email', field: 'email'}
-                      ];
-    
-      useEffect(() => {
-        window.scrollTo(0,0);
-        Prism.highlightAll();
-        if(!data.length)
-          fetch('https://jsonplaceholder.typicode.com/users')
-              .then(response => response.json())
-              .then((result) => {
-                setData(result);
-              });
-      }); 
-      return (`}</code>
-        <code className="language-javascript">
+
+  const columns = useMemo(() => [
+    { header: "id", accessorKey: "id" },
+    { header: "Name", accessorKey: "name" },
+    { header: "Username", accessorKey: "username" },
+    { header: "Email", accessorKey: "email" },
+  ],
+    [],
+  );
+
+  const data = useMemo(() => [
+    {
+      "id": 1,
+      "name": "Leanne Graham",
+      "username": "Bret",
+      "email": "Sincere@april.biz",
+    },
+    {
+      "id": 2,
+      "name": "Ervin Howell",
+      "username": "Antonette",
+      "email": "Shanna@melissa.tv",
+    },
+    {
+      "id": 3,
+      "name": "Clementine Bauch",
+      "username": "Samantha",
+      "email": "Nathan@yesenia.net",
+    },
+    {
+      "id": 4,
+      "name": "Patricia Lebsack",
+      "username": "Karianne",
+      "email": "Julianne.OConner@kory.org",
+    },
+    {
+      "id": 5,
+      "name": "Chelsey Dietrich",
+      "username": "Kamren",
+      "email": "Lucio_Hettinger@annie.ca",
+    },
+    {
+      "id": 6,
+      "name": "Mrs. Dennis Schulist",
+      "username": "Leopoldo_Corkery",
+      "email": "Karley_Dach@jasper.info",
+    },
+    {
+      "id": 7,
+      "name": "Kurtis Weissnat",
+      "username": "Elwyn.Skiles",
+      "email": "Telly.Hoeger@billy.biz",
+    },
+
+  ],
+    [],
+  );
+
+  return (`}</code>
+        <code className="language-markup">
           {`
-    <MaterialTable
-    title="Basic Filtering Table"
-    columns={[
-      { title: 'Name', field: 'name' },
-      { title: 'Surname', field: 'surname' },
-      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-      {
-        title: 'Birth Place',
-        field: 'birthCity',
-        lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-      },
-    ]}
-    data={[
-      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-      { name: 'Zerya Betül', surname: 'Baran', birthYear: 2017, birthCity: 34 },
-    ]}        
-    options={{
-      filtering: true
-    }}
-  />`}
-        </code>
-
-        <code className="language-javascript">
-          {`
-
-<=======ApiDataFetch.js=======>
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import Prism from "prismjs";
-import '../prism.css';
-
-const ApiDataTableFetch = (url)=> {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] =  useState(null);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-            Prism.highlightAll();
-        setLoading(true);
-        axios.get(url)
-        .then((res)=>{
-            setData(res.data)
-        })
-        .catch((err)=>{
-            setError(err)
-        })
-        .finally(()=>{
-            setLoading(false);
-        })
-    },[url]);
-    return {data,loading, error}
-}
-export {ApiDataTableFetch}`}
-        </code>
+    <div className="demo-wrapper">
+      <MaterialReactTable
+        columns={columns}
+        data={data}
+        initialState={{ showColumnFilters: true }}
+        enableColumnActions={true}
+        enableColumnFilters={true}
+        enablePagination={true}
+        enableSorting={false}
+        enableBottomToolbar={true}
+        enableTopToolbar={false}
+        muiTableBodyRowProps={{ hover: false }}
+        muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
+      />
+    </div>`}
+        </code><code className="language-javascript">{`
+);`}</code>
       </pre>
     </div>
   );
