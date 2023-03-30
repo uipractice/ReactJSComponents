@@ -17,3 +17,11 @@ table thead .navbar-fixed-bottom .dropdown .caret {
     border-bottom: 4px solid;
     content: "";
 }
+
+.Mui-TableHeadCell-Content-Labels:hover .Mui-TableHeadCell-Content-Wrapper {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.Mui-TableHeadCell-Content-Labels:hover .css-18c75ho-MuiButtonBase-root-MuiTableSortLabel-root:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
