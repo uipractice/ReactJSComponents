@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import uuid from 'react-uuid';
+import { v4 as uuid } from 'uuid';
 import Prism from "prismjs";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
