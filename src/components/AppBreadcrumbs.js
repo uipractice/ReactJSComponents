@@ -10,81 +10,80 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import AutoComplete from './util/AutoComplete';
 
 const availableComponentRoutes = [
-  { componentName: 'Button', path:'/button' },
-  { componentName: 'Toggle Button', path:'/toggleButton' },
-  { componentName: 'Input', path:'/input' },
-  { componentName: 'Radio & Checkbox', path:'/radioButton' },
-  { componentName: 'Dropdown', path:'/dropdown' },
-  { componentName: 'Image', path:'/image' },
-  { componentName: 'Tooltip', path:'/tooltip' },
-  { componentName: 'Popover', path:'/popover' },
-  { componentName: 'Modal', path:'/modal' },
-  { componentName: 'Alert', path:'/alert' },
-  { componentName: 'Spinner', path:'/spinner' },
-  { componentName: 'Toast', path:'/toast' },
-  { componentName: 'Basic Table', path:'/table' },
-  { componentName: 'Tabs', path:'/tabs' },
-  { componentName: 'Form', path:'/form' },
-  { componentName: 'API Data Table', path:'/apidatatable' },
-  { componentName: 'CRUD Table', path:'/editabletable' },
-  { componentName: 'Filter Table', path:'/filtertable' },
-  { componentName: 'Pagination Table', path:'/paginationtable' },
-  { componentName: 'Sortable Table', path:'/sortabletable' },
-  { componentName: 'Accordion', path:'/accordion' },
-  { componentName: 'Breadcrumbs', path:'/breadcrumbs' },
-  { componentName: 'Carousels', path:'/carousels' },
-  { componentName: 'Progress', path:'/progress' },
-  { componentName: 'Cards', path:'/cards' },
-  { componentName: 'Pagination', path:'/pagination' },
-  { componentName: 'Badge', path:'/badge' },
-  { componentName: 'ButtonGroup', path:'/buttongroup' }
+  { componentName: 'Button', path: '/button' },
+  { componentName: 'Toggle Button', path: '/toggleButton' },
+  { componentName: 'Input', path: '/input' },
+  { componentName: 'Radio & Checkbox', path: '/radioButton' },
+  { componentName: 'Dropdown', path: '/dropdown' },
+  { componentName: 'Image', path: '/image' },
+  { componentName: 'Tooltip', path: '/tooltip' },
+  { componentName: 'Popover', path: '/popover' },
+  { componentName: 'Modal', path: '/modal' },
+  { componentName: 'Alert', path: '/alert' },
+  { componentName: 'Spinner', path: '/spinner' },
+  { componentName: 'Toast', path: '/toast' },
+  { componentName: 'Basic Table', path: '/table' },
+  { componentName: 'Tabs', path: '/tabs' },
+  { componentName: 'Form', path: '/form' },
+  { componentName: 'API Data Table', path: '/apidatatable' },
+  { componentName: 'CRUD Table', path: '/editabletable' },
+  { componentName: 'Filter Table', path: '/filtertable' },
+  { componentName: 'Pagination Table', path: '/paginationtable' },
+  { componentName: 'Sortable Table', path: '/sortabletable' },
+  { componentName: 'Accordion', path: '/accordion' },
+  { componentName: 'Breadcrumbs', path: '/breadcrumbs' },
+  { componentName: 'Progress', path: '/progress' },
+  { componentName: 'Cards', path: '/cards' },
+  { componentName: 'Pagination', path: '/pagination' },
+  { componentName: 'Badge', path: '/badge' },
+  { componentName: 'ButtonGroup', path: '/buttongroup' }
 ];
 
 function AppBreadcrumbs(props) {
-  const [ toggleSearch, setToggleSearch ] = useState(false);
-  const [ selectedRoutes, setSelectedRoutes] = useState([]);
+  const [toggleSearch, setToggleSearch] = useState(false);
+  const [selectedRoutes, setSelectedRoutes] = useState([]);
   const inputEl = useRef(null);
   const handleSearch = () => {
     setToggleSearch(!toggleSearch);
     setSelectedRoutes([]);
   };
   const searchIconClasses = classNames(
-            'material-icons', 
-            { componentSearch: !toggleSearch }, 
-            { componentSearchToggled: toggleSearch }
-          );
+    'material-icons',
+    { componentSearch: !toggleSearch },
+    { componentSearchToggled: toggleSearch }
+  );
   const handleInputChanges = (ev) => {
     ev.persist()
-    if(ev.target.value === '') {
+    if (ev.target.value === '') {
       setSelectedRoutes([]);
       return;
     }
-    const filteredRoutes = availableComponentRoutes.filter(item => 
-        item.componentName.toLowerCase().includes(ev.target.value.toLowerCase()));
+    const filteredRoutes = availableComponentRoutes.filter(item =>
+      item.componentName.toLowerCase().includes(ev.target.value.toLowerCase()));
     console.log('filterdResults', filteredRoutes);
     setSelectedRoutes(filteredRoutes);
   };
 
   useEffect(() => {
-    if(toggleSearch) {
+    if (toggleSearch) {
       inputEl.current.children[0].focus();
     }
-  },[toggleSearch]);
+  }, [toggleSearch]);
 
   return (
     <div className='app-breadcrumbs'>
-      <Breadcrumbs 
-        style={{marginTop: '-0.1px'}}
+      <Breadcrumbs
+        style={{ marginTop: '-0.1px' }}
         separator={
-          <NavigateNextIcon 
-            fontSize="small" 
+          <NavigateNextIcon
+            fontSize="small"
             style={{
-              fontSize: '16px', 
+              fontSize: '16px',
               marginTop: '5px',
               marginLeft: '-8px'
-            }} 
+            }}
           />} aria-label="breadcrumb">
-        <NavLink 
+        <NavLink
           to="/"
           activeClassName='breadLinkActive'
           style={{
@@ -94,26 +93,26 @@ function AppBreadcrumbs(props) {
           }}>
           Home
         </NavLink>
-        <NavLink activeClassName='breadLinkActive' to="/" style={{fontSize: '14px', color: 'rgb(0, 136, 209)', marginLeft: '-5px'}}>
+        <NavLink activeClassName='breadLinkActive' to="/" style={{ fontSize: '14px', color: 'rgb(0, 136, 209)', marginLeft: '-5px' }}>
           React Components
         </NavLink>
-        {props.compoName && 
-          <NavLink 
+        {props.compoName &&
+          <NavLink
             style={{
-              fontSize: '14px', 
+              fontSize: '14px',
               marginLeft: '-5px',
               color: 'rgb(0, 136, 209)',
               pointerEvents: 'none'
-            }} 
+            }}
             to=''
             activeClassName='breadLinkActive'
           >
-          {props.compoName}
-        </NavLink>}
-        <div style={{cursor: 'pointer'}}>
+            {props.compoName}
+          </NavLink>}
+        <div style={{ cursor: 'pointer' }}>
           <i className={searchIconClasses} onClick={handleSearch} disabled={toggleSearch}>search</i>
-          { toggleSearch &&
-             <Input
+          {toggleSearch &&
+            <Input
               ref={inputEl}
               id="standard-adornment"
               type='text'
@@ -125,20 +124,20 @@ function AppBreadcrumbs(props) {
                 padding: '15px 3px 13px 1px',
                 textTransform: 'capitalize'
               }}
-             endAdornment={
-               <InputAdornment position="end">
-                 <span 
-                  className="material-icons closeIconClass"
-                  onClick={handleSearch} 
+              endAdornment={
+                <InputAdornment position="end">
+                  <span
+                    className="material-icons closeIconClass"
+                    onClick={handleSearch}
                   >close</span>
-               </InputAdornment>
-             }
-           />
+                </InputAdornment>
+              }
+            />
           }
-          { selectedRoutes.length > 0 ? <AutoComplete data={selectedRoutes}/> : null }
+          {selectedRoutes.length > 0 ? <AutoComplete data={selectedRoutes} /> : null}
         </div>
       </Breadcrumbs>
-      
+
     </div>
   );
 }
