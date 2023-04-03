@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import './AppBreadcrumbs.scss';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 import { NavLink } from 'react-router-dom';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import AutoComplete from './util/AutoComplete';
 
