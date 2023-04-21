@@ -209,7 +209,8 @@ export const RbPaginationTable = (props) => {
           <li>
             <strong>Step 2 :</strong> Import component in view where ever its
             necessary:{" "}
-            <code>{`import React, { useEffect } from 'react'`}</code>
+            <code>{`import {useReactTable, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, flexRender} from '@tanstack/react-table'`}
+            </code>
             <br />
           </li>
           <li>
