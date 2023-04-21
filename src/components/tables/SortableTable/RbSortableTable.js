@@ -1,67 +1,78 @@
-import React from "react";
-import Spinner from "react-bootstrap/Spinner";
-import "../../prism.css";
+import React, { useEffect } from "react";
 import Prism from "prismjs";
-import { ApiDataTableFetch } from "../../services/ApiDataTableFetch";
 import "../../prism.css";
-import BootstrapTable from "react-bootstrap-table-next";
-import ToolkitProvider, {
-  Search,
-} from "../../../../node_modules/react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import paginationFactory from "react-bootstrap-table2-paginator";
-import { useState, useEffect } from "react";
 import "./sortabletable.css";
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { makeData } from '../makeData'
 
 export const RbSortableTable = (props) => {
-  const { SearchBar, ClearSearchButton } = Search;
-  const [state] = useState({
-    columns: [
-      { dataField: "id", text: "Id", sort: true },
-      { dataField: "name", text: "Name", sort: true },
-      { dataField: "email", text: "Email", sort: true },
-      { dataField: "postId", text: "postId", sort: true },
+
+  const rerender = React.useReducer(() => ({}), {})[1]
+
+  const [sorting, setSorting] = React.useState([])
+
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        header: () => <span>First Name</span>,
+        footer: props => props.column.id,
+      },
+      {
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
+      },
     ],
-  });
+    []
+  )
 
-  const { data, error } = ApiDataTableFetch(
-    "https://jsonplaceholder.typicode.com/comments"
-  );
-  if (error) {
-    return error.message;
-  }
+  const [data, setData] = React.useState(() => makeData(100000))
+  const refreshData = () => setData(() => makeData(100000))
 
-  const customTotal = (from, to, size) => (
-    <span className="react-bootstrap-table-pagination-total">
-      Showing {from} to {to} of {size} Results
-    </span>
-  );
-
-  const options = {
-    paginationSize: 3,
-    pageStartIndex: 1,
-    //   alwaysShowAllBtns: true, // Always show next and previous button
-    nextPageTitle: "First page",
-    //   prePageTitle: 'Pre page',
-    firstPageTitle: "Next page",
-    lastPageTitle: "Last page",
-    showTotal: true,
-    paginationTotalRenderer: customTotal,
-    //   disablePageTitle: true,
-    sizePerPageList: [
-      {
-        text: "5",
-        value: 5,
-      },
-      {
-        text: "10",
-        value: 10,
-      },
-      {
-        text: "20",
-        value: 20,
-      },
-    ], // A numeric array is also available. the purpose of above example is custom the text
-  };
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
+  })
 
   return (
     <div className="demo-wrapper">
@@ -70,30 +81,66 @@ export const RbSortableTable = (props) => {
         according to any specific columns.
       </div>
       <div style={{ marginRight: "20px" }}>
-        {data ? (
-          <ToolkitProvider
-            keyField="id"
-            data={data}
-            columns={state.columns}
-            search
-          >
-            {(props) => (
-              <div>
-                <SearchBar {...props.searchProps} />
-                <ClearSearchButton {...props.searchProps} />
-                <hr />
-                <BootstrapTable
-                  keyField="id"
-                  pagination={paginationFactory(options)}
-                  {...props.baseProps}
-                />
-              </div>
-            )}
-          </ToolkitProvider>
-        ) : (
-          <Spinner animation="border" variant="dark" />
-        )}
+        <table className='table'>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id} className='table-primary'>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted()] ?? null}
+                        </div>
+                      )}
+                    </th>
+                  )
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.slice(0, 10)
+              .map(row => {
+                return (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map(cell => {
+                      return (
+                        <td key={cell.id} className='column-width'>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+          </tbody>
+        </table>
+        <div className='d-flex gap-1'>
+          <button className='btn btn-sm btn-primary' onClick={() => rerender()}>Force Rerender</button>
+          <button className='btn btn-sm btn-secondary' onClick={() => refreshData()}>Refresh Data</button>
+        </div>
       </div>
+
 
       <div className="compo-description">
         <h4>Description</h4>
@@ -242,7 +289,7 @@ const options = {
 }`}
         </code>
         <code className="language-javascript">
-        {`
+          {`
 
 <=======ApiDataFetch.js=======>
 

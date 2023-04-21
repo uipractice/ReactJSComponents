@@ -1,27 +1,7 @@
-table thead .caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    border-top: 4px dashed;
-    border-top: 4px solid;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
+.cursor-pointer {
+    cursor: pointer;
 }
 
-table thead .dropup .caret,
-table thead .navbar-fixed-bottom .dropdown .caret {
-    border-top: 0;
-    border-bottom: 4px dashed;
-    border-bottom: 4px solid;
-    content: "";
-}
-
-.Mui-TableHeadCell-Content-Labels:hover .Mui-TableHeadCell-Content-Wrapper {
-    color: rgba(0, 0, 0, 0.54);
-}
-
-.Mui-TableHeadCell-Content-Labels:hover .css-18c75ho-MuiButtonBase-root-MuiTableSortLabel-root:hover {
-    color: rgba(0, 0, 0, 0.6);
+.select-none {
+    user-select: none;
 }
