@@ -56,8 +56,8 @@ export const CreateNewAccountModal = ({ open, columns, onClose, onSubmit }) => {
         </form>
       </DialogContent>
       <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
+        <Button variant='outlined' color='secondary' onClick={onClose}>Cancel</Button>
+        <Button color="primary" onClick={handleSubmit} variant="contained">
           Create New Account
         </Button>
       </DialogActions>
@@ -201,7 +201,7 @@ export const MatEditableTable = () => {
           )}
           renderTopToolbarCustomActions={() => (
             <Button
-              color="secondary"
+              color="primary"
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
             >

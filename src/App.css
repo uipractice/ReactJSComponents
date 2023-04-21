@@ -54,3 +54,11 @@
 .sidebar-body.card-body {
   padding: 1.25rem !important;
 }
+
+.border-none {
+  border: none !important;
+}
+
+.column-width {
+  width: 7rem;
+}
