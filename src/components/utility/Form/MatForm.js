@@ -1,6 +1,6 @@
 import Prism from "prismjs";
 import "../../prism.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sheet from '@mui/joy/Sheet';
 import Typography from '@mui/joy/Typography';
 import FormControl from '@mui/joy/FormControl';
@@ -10,20 +10,33 @@ import Button from '@mui/material/Button';
 import Link from '@mui/joy/Link';
 
 export const MatForm = () => {
+
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
+  const validateEmail = (email) => {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
+
+  const handleChange = (event) => {
+    const isValidEmail = validateEmail(event.target.value);
+    setIsEmailValid(isValidEmail);
+  }
+
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "10px" }}>
+        <div className='mb-2'>
           <strong>Basic Login Form</strong>
         </div>
-        <div style={{ width: "700px" }}>
+        <div className='w-100'>
           <Sheet
             sx={{
               width: 300,
-              mx: 'auto', // margin left & right
-              my: 4, // margin top & botom
-              py: 3, // padding top & bottom
-              px: 2, // padding left & right
+              mx: 'auto',
+              my: 4,
+              py: 3,
+              px: 2,
               display: 'flex',
               flexDirection: 'column',
               gap: 2,
@@ -41,22 +54,21 @@ export const MatForm = () => {
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input
-                // html input attribute
                 name="email"
                 type="email"
                 placeholder="johndoe@email.com"
+                onChange={handleChange}
               />
             </FormControl>
             <FormControl>
               <FormLabel>Password</FormLabel>
               <Input
-                // html input attribute
                 name="password"
                 type="password"
                 placeholder="password"
               />
             </FormControl>
-            <Button sx={{ mt: 1 /* margin top */ }} style={{ border: '1px solid' }}>Log in</Button>
+            <Button variant='contained' className="btn-submit" disabled={!isEmailValid}>Log in</Button>
             <Typography
               endDecorator={<Link href="#">Sign up</Link>}
               fontSize="sm"
@@ -118,68 +130,79 @@ import Button from '@mui/material/Button';
 import Link from '@mui/joy/Link';
 
 export const MatForm = () => {
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
+  const validateEmail = (email) => {
+    var re = /\\S+@\\S+\\.\\S+/;
+    return re.test(email);
+  }
+
+  const handleChange = (event) => {
+    const isValidEmail = validateEmail(event.target.value);
+    setIsEmailValid(isValidEmail);
+  }
   return (`}
         </code>
-        <code className="language-javascript">
+        <code className="language-markup">
           {`
           <>
-              <div style={{ marginBottom: "10px" }}>
-          <strong>Basic Login Form</strong>
-        </div>
-        <div style={{ width: "700px" }}>
-    <Sheet
-          sx={{
-            width: 300,
-            mx: 'auto', // margin left & right
-            my: 4, // margin top & botom
-            py: 3, // padding top & bottom
-            px: 2, // padding left & right
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-          }}
-          variant="outlined"
-        >
-          <div>
-            <Typography level="h4" component="h1">
-              <b>Welcome!</b>
-            </Typography>
-            <Typography level="body2">Sign in to continue.</Typography>
+          <div className="demo-wrapper">
+          <div className='mb-2'>
+            <strong>Basic Login Form</strong>
           </div>
-          <FormControl>
-            <FormLabel>Email</FormLabel>
-            <Input
-              // html input attribute
-              name="email"
-              type="email"
-              placeholder="johndoe@email.com"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Password</FormLabel>
-            <Input
-              // html input attribute
-              name="password"
-              type="password"
-              placeholder="password"
-            />
-          </FormControl>
-          <Button sx={{ mt: 1 /* margin top */ }} style={{border:'1px solid'}}>Log in</Button>
-          <Typography
-            endDecorator={<Link href="#">Sign up</Link>}
-            fontSize="sm"
-            sx={{ alignSelf: 'center' }}
-          >
-            Don&apos;t have an account?
-          </Typography>
-        </Sheet>
-        </div>
+          <div className='w-100'>
+            <Sheet
+              sx={{
+                width: 300,
+                mx: 'auto',
+                my: 4,
+                py: 3,
+                px: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                borderRadius: 'sm',
+                boxShadow: 'md',
+              }}
+              variant="outlined"
+            >
+              <div>
+                <Typography level="h4" component="h1">
+                  <b>Welcome!</b>
+                </Typography>
+                <Typography level="body2">Sign in to continue.</Typography>
+              </div>
+              <FormControl>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="johndoe@email.com"
+                  onChange={handleChange}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                />
+              </FormControl>
+              <Button variant='contained' className="btn-submit" disabled={!isEmailValid}>Log in</Button>
+              <Typography
+                endDecorator={<Link href="#">Sign up</Link>}
+                fontSize="sm"
+                sx={{ alignSelf: 'center' }}
+              >
+                Don&apos;t have an account?
+              </Typography>
+            </Sheet>
+          </div>
         </>`}
         </code>
         <code className="language-javascript">{`
-);
+  );
 }
  `}</code>
       </pre>
