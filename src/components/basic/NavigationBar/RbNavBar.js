@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -7,14 +7,12 @@ import reactLogo from "../../../images/LogoforNavBar.svg";
 import "../../prism.css";
 import Prism from "prismjs";
 
-import { useEffect } from "react";
-
 export const RbNavBar = () => {
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <hr />A NavBar example of all the sub-components included in a
+        <div className='mb-2'>
+          A NavBar example of all the sub-components included in a
           responsive light-themed navbar that automatically collapses at the lg
           (large) breakpoint.
         </div>
@@ -62,7 +60,7 @@ export const RbNavBar = () => {
         </ul>
 
         <hr />
-        <div style={{ marginBottom: "30px", marginTop: "10px" }}>
+        <div className='mb-2'>
           A simple flexible branding component. Images are supported but will
           likely require custom styling to work well.
         </div>
@@ -113,7 +111,7 @@ export const RbNavBar = () => {
           </li>
         </ul>
         <hr />
-        <div style={{ marginBottom: "10px", marginTop: "10px" }}>
+        <div>
           Responsive behaviors
         </div>
         <ul>
@@ -218,7 +216,7 @@ export const RbNavBarCode = () => {
   return (
     <div className="jsx-code-wrapper">
       <h4>React Bootstrap code</h4>
-      <pre style={{ marginRight: "20px", background: "#fff" }}>
+      <pre className='pre-code'>
         <code className="language-javascript">
           {`
 import React from 'react';
@@ -234,8 +232,7 @@ export const RbNavBar = () => {
         <code className="language-markup">
           {`<>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "5px", marginTop: "5px" }}>
-          <hr />
+        <div className="mb-2">
         A NavBar example of all the sub-components included in a responsive light-themed navbar that automatically collapses at the lg (large) breakpoint.
         </div>
 <Container>
