@@ -5,21 +5,29 @@ import "../../prism.css";
 import React, { useEffect } from "react";
 
 export const RbForm = (props) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    Prism.highlightAll();
-  }, []);
+
+  const validateEmail = (email) => {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
+
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "10px" }}>
+        <div className='mb-1'>
           <strong>Basic Login Form</strong>
         </div>
-        <div style={{ width: "700px" }}>
+        <div className='w-50'>
           <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control type="email" placeholder="Enter email"
+                onChange={(event) => {
+                  const isValidEmail = validateEmail(event.target.value);
+                  const submitButton = document.querySelector('.btn-submit');
+                  submitButton.disabled = !isValidEmail;
+                }}
+              />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
               </Form.Text>
@@ -32,7 +40,7 @@ export const RbForm = (props) => {
             <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" className='btn-submit' disabled >
               Submit
             </Button>
           </Form>
@@ -79,72 +87,47 @@ import '../../prism.css';
 import React, { useEffect } from 'react';
 
 export const RbForm = (props) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    Prism.highlightAll();
-  }, []);
+  
+  const validateEmail = (email) => {
+    var re = /\\S+@\\S+\\.\\S+/;
+    return re.test(email);
+  }
+
   return (`}
         </code>
         <code className="language-markup">
           {`
-              <>
-                <Form>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
-                    <Form.Text className="text-muted">
-                      We'll never share your email with anyone else.
-                    </Form.Text>
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
-                  </Form.Group>
-                  <Form.Group controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
-                  </Button>
-                </Form>
-              </div>
-              <div style={{ marginBottom: '10px', marginTop: '20px' }}><strong>Form Controls</strong></div>
-              <div style={{ width: '700px' }}>
-                <Form>
-                  <Form.Group controlId="exampleForm.ControlInput1">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="name@example.com" />
-                  </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Example select</Form.Label>
-                    <Form.Control as="select">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlSelect2">
-                    <Form.Label>Example multiple select</Form.Label>
-                    <Form.Control as="select" multiple>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group controlId="exampleForm.FileInput">
-                    <Form.Label>Default file input example</Form.Label>
-                    <Form.Control type="file" />
-                  </Form.Group>
-                </Form>
-              </>           
+          <>
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" placeholder="Enter email"
+                  onChange={(event) => {
+                    const isValidEmail = validateEmail(event.target.value);
+                    const submitButton = document.querySelector('.btn-submit');
+                    submitButton.disabled = !isValidEmail;
+                  }} />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" />
+              </Form.Group>
+              <Form.Group controlId="formBasicCheckbox">
+                <Form.Check type="checkbox" label="Check me out" />
+              </Form.Group>
+              <Button variant="primary" className="btn-submit" disabled>
+                Submit
+              </Button>
+            </Form>
+          </div>
+          </>           
                 `}
         </code>
         <code className="language-javascript">{`
-);
+  );
 }
  `}</code>
       </pre>

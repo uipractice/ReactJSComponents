@@ -60,5 +60,24 @@
 }
 
 .column-width {
-  width: 7rem;
+  width: 2000px;
+}
+
+/* .hover-indicate {
+  color: var(--bs-green) !important;
+} */
+
+.hover-indicate :hover {
+  border: 1px solid var(--bs-gray) !important;
+}
+
+.scrollable {
+  max-height: 20rem;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.pre-code {
+  margin-right: 20px !important;
+  background: #fff !important;
 }
