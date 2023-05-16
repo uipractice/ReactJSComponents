@@ -1,14 +1,18 @@
-import React, { useEffect, useMemo, useCallback, useReducer, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Prism from "prismjs";
 import "../../prism.css";
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   flexRender
 } from "@tanstack/react-table"
 import { makeData } from '../makeData';
+import { Button, Modal, Form, Table } from 'react-bootstrap';
+
+const useCellRef = () => {
+  const cellRef = useRef(null)
+  return cellRef;
+}
 
 function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
   const initialValue = getValue();
@@ -25,6 +29,7 @@ function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
     setValue(initialValue);
   }, [initialValue]);
 
+
   return {
     value,
     setValue,
@@ -32,120 +37,69 @@ function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
   };
 }
 
-// Give our default column cell renderer editing superpowers!
 const defaultColumn = {
   cell: function Cell(props) {
     const { value, setValue, onBlur } = useDefaultColumn(props);
-
     return (
       <input
-        className='form-control form-control-sm border-none'
+        className='form-control form-control-sm border-none column-width'
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
+        ref={useCellRef()}
       />
     );
   },
 };
 
-function useEditableColumn({ getValue, row: { index }, column: { id }, table }) {
-  const initialValue = getValue();
-  const [value, setValue] = useState(initialValue);
-  const [isEditing, setIsEditing] = useState(false);
+const RbEditableTable = () => {
 
-  const onSave = () => {
-    table.options.meta?.updateData(index, id, value);
-    setIsEditing(false);
-  };
-
-  const onDelete = () => {
-    table.options.meta?.deleteData(index);
-  };
-
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  return {
-    value,
-    setValue,
-    isEditing,
-    setIsEditing,
-    onSave,
-    onDelete
-  };
-}
-
-
-function useSkipper() {
-  const shouldSkipRef = useRef(true)
-  const shouldSkip = shouldSkipRef.current
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skip = useCallback(() => {
-    shouldSkipRef.current = false
-  }, [])
-
-  useEffect(() => {
-    shouldSkipRef.current = true
-  })
-
-  return [shouldSkip, skip]
-}
-
-const RbEditableTable = (props) => {
-
-  const rerender = useReducer(() => ({}), {})[1]
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'firstName',
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        header: " ",
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'firstName',
+        header: "First Name",
+      },
+      {
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
+        header: 'Age',
+      },
+      {
+        accessorKey: 'visits',
+        header: "Visits",
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
       },
     ],
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(1000))
-  const refreshData = () => setData(() => makeData(1000))
-
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
+  const [data, setData] = useState(() => makeData(10))
 
   const table = useReactTable({
     data,
     columns,
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    autoResetPageIndex,
-    // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        // Skip page index reset until after next rerender
-        skipAutoResetPageIndex()
         setData(old =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -161,133 +115,130 @@ const RbEditableTable = (props) => {
     },
   })
 
+  const [rowData, setRowData] = useState(table.getRowModel().rows);
+  const [formData, setFormData] = useState({});
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setRowData((prevRowData) => [
+      ...prevRowData,
+      { id: Date.now(), ...formData },
+    ]);
+    setFormData({});
+    setShow(false);
+  };
+
+  const handleDelete = (e, data) => {
+    let filtered = table.getRowModel().rows.filter(i => {
+      return i.id !== data.id
+    })
+    setRowData(filtered);
+  }
+
+  const [show, setShow] = useState(false);
+
+  const handleModal = () => {
+    setShow(!show);
+  }
+
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "10px" }}>
+        <div className='mb-1'>
           <h5> Editable / CRUD Table</h5>
-          <div style={{ marginRight: "10px" }}>
-            <table className='table'>
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id} className='table-primary'>
-                    {headerGroup.headers.map(header => {
-                      return (
-                        <th key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <div>
-
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {header.column.getCanFilter() ? (
-                                <div>
-                                  <Filter column={header.column} table={table} />
-                                </div>
-                              ) : null}
-                            </div>
-                          )}
-                        </th>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => {
-                  return (
-                    <tr key={row.id}>
-                      {row.getVisibleCells().map(cell => {
+          <div className='mr-2'>
+            <div className='d-flex justify-content-between mb-1'>
+              <button className='btn btn-sm btn-primary' onClick={handleModal}>Add new row</button>
+            </div>
+            <div className="scrollable-vertical scrollable-horizontal">
+              <Table>
+                <thead>
+                  {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id} className='table-primary'>
+                      {headerGroup.headers.map(header => {
                         return (
-                          <td key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
+                          <th key={header.id} colSpan={header.colSpan}>
+                            {header.isPlaceholder ? null : (
+                              <div className='column-width'>
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                              </div>
                             )}
-                          </td>
+                          </th>
                         )
                       })}
                     </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <button className='btn btn-sm btn-primary mr-2' onClick={() => rerender()}>Force Rerender</button>
-                <button className='btn btn-sm btn-secondary mr-2' onClick={() => refreshData()}>Refresh Data</button>
-              </div>
-
-              <div className="d-flex align-items-center">
-                <button
-                  className="btn btn-sm btn-outline-primary me-1"
-                  onClick={() => table.setPageIndex(0)}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <strong>{'<<'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary me-1"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <strong>{'<'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary me-1"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <strong>{'>'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary me-1"
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <strong>{'>>'}</strong>
-                </button>
-
-                <span className="me-2">
-                  <div className="d-inline-block">Page</div>
-                  <strong className="mx-1">
-                    {table.getState().pagination.pageIndex + 1} of{' '}
-                    {table.getPageCount()}
-                  </strong>
-                </span>
-
-                <span className="me-2">
-                  <div className="d-inline-block">Go to page:</div>
-                  <input
-                    type="number"
-                    defaultValue={table.getState().pagination.pageIndex + 1}
-                    onChange={e => {
-                      const page = e.target.value ? Number(e.target.value) - 1 : 0
-                      table.setPageIndex(page)
-                    }}
-                    className="form-control form-control-sm d-inline-block mx-1"
-                    style={{ width: '70px' }}
-                  />
-                </span>
-
-                <span>
-                  <select
-                    className='form-select form-select-sm'
-                    value={table.getState().pagination.pageSize}
-                    onChange={e => {
-                      table.setPageSize(Number(e.target.value))
-                    }}
-                  >
-                    {[10, 20, 30, 40, 50].map(pageSize => (
-                      <option key={pageSize} value={pageSize}>
-                        Show {pageSize}
-                      </option>
-                    ))}
-                  </select>
-                </span>
-              </div>
+                  ))}
+                </thead>
+                <tbody>
+                  {rowData.map(row => {
+                    return (
+                      <tr key={row.id}>
+                        <td>
+                          <span className="btn-group">
+                            <button className='btn btn-sm btn-outline-danger' onClick={(e) => handleDelete(e, row)}>Delete</button>
+                            <button className="btn btn-sm btn-outline-secondary edit-button">Edit</button>
+                          </span>
+                        </td>
+                        {row.getVisibleCells().slice(1).map(cell => {
+                          return (
+                            <td key={cell.id} className='hover-indicate'>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
             </div>
+            <Modal show={show} onHide={handleModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add new row</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form className='d-flex flex-column gap-2' onSubmit={handleFormSubmit}>
+                  <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control type="text" placeholder="Enter value" name="field1" onChange={handleFormChange} value={formData.field1} autoFocus />
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control type="text" placeholder="Enter value" />
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Age</Form.Label>
+                    <Form.Control type="number" placeholder="Enter value" />
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Status</Form.Label>
+                    <Form.Control type="text" placeholder="Enter value" />
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Profile progress</Form.Label>
+                    <Form.Control type="number" placeholder="Enter value" />
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleModal}>Cancel</Button>
+                <Button variant="primary" onClick={handleModal}>Save changes</Button>
+              </Modal.Footer>
+            </Modal>
           </div>
 
           <div className="compo-description">
@@ -319,59 +270,23 @@ const RbEditableTable = (props) => {
   );
 };
 
-function Filter({ column, table }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === "number" ? (
-    <div className='input-group input-group-sm'>
-      <input
-        type="number"
-        value={columnFilterValue?.[0] ?? ""}
-        onChange={e => column.setFilterValue(old => [e.target.value, old?.[1]])}
-        placeholder={`Min`}
-        className="form-control form-control-sm"
-      />
-      <input
-        type="number"
-        value={columnFilterValue?.[1] ?? ""}
-        onChange={e => column.setFilterValue(old => [old?.[0], e.target.value])}
-        placeholder={`Max`}
-        className="form-control form-control-sm"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={columnFilterValue ?? ""}
-      onChange={e => column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      className="form-control form-control-sm"
-    />
-  )
-}
-
 const RbEditableTableCode = () => {
   useEffect(() => Prism.highlightAll(), []);
   return (
     <div className="jsx-code-wrapper">
       <h4>React Bootstrap code</h4>
-      <pre style={{ marginRight: "20px", background: "#fff" }}>
+      <pre className='pre-code'>
         <code className="language-javascript">
           {`<===========RbEditableTable.js==============>
           
-import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   flexRender
 } from "@tanstack/react-table"
 import { makeData } from '../makeData';
+import { Button, Modal, Form, Table } from 'react-bootstrap';
 
 function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
   const initialValue = getValue();
@@ -410,53 +325,41 @@ const defaultColumn = {
   },
 };
 
-function useSkipper() {
-  const shouldSkipRef = useRef(true)
-  const shouldSkip = shouldSkipRef.current
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skip = React.useCallback(() => {
-    shouldSkipRef.current = false
-  }, [])
-
-  React.useEffect(() => {
-    shouldSkipRef.current = true
-  })
-
-  return [shouldSkip, skip]
-}
-
 const RbEditableTable = (props) => {
 
   return (
-  const rerender = useReducer(() => ({}), {})[1]
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'firstName',
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        header: " ",
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'firstName',
+        header: "First Name",
+      },
+      {
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
+        header: 'Age',
+      },
+      {
+        accessorKey: 'visits',
+        header: "Visits",
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
       },
     ],
     []
@@ -472,14 +375,10 @@ const RbEditableTable = (props) => {
     columns,
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
         // Skip page index reset until after next rerender
-        skipAutoResetPageIndex()
         setData(old =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -499,161 +398,99 @@ const RbEditableTable = (props) => {
   return (`}</code><code className="language-markup">{`
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-1">
           <h5> Editable / CRUD Table</h5>
-          <div style={{ marginRight: "10px" }}>
-            <table className='table table-sm'>
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => {
-                      return (
-                        <th key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <div>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {header.column.getCanFilter() ? (
+          <div className='mr-2'>
+            <div className='d-flex justify-content-between mb-1'>
+              <button className='btn btn-sm btn-primary' onClick={handleModal}>Add new row</button>
+            </div>
+            <div className="scrollable-vertical scrollable-horizontal">
+                <Table>
+                  <thead>
+                    {table.getHeaderGroups().map(headerGroup => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => {
+                          return (
+                            <th key={header.id} colSpan={header.colSpan}>
+                              {header.isPlaceholder ? null : (
                                 <div>
-                                  <Filter column={header.column} table={table} />
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                                  {header.column.getCanFilter() ? (
+                                    <div>
+                                      <Filter column={header.column} table={table} />
+                                    </div>
+                                  ) : null}
                                 </div>
-                              ) : null}
-                            </div>
-                          )}
-                        </th>
+                              )}
+                            </th>
+                          )
+                        })}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody>
+                    {table.getRowModel().rows.map(row => {
+                      return (
+                        <tr key={row.id}>
+                          {row.getVisibleCells().map(cell => {
+                            return (
+                              <td key={cell.id}>
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </td>
+                            )
+                          })}
+                        </tr>
                       )
                     })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => {
-                  return (
-                    <tr key={row.id}>
-                      {row.getVisibleCells().map(cell => {
-                        return (
-                          <td key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-            <div className="d-flex justify-content-between">
-              <div>
-                <button className='btn btn-sm btn-primary mr-2' onClick={() => rerender()}>Force Rerender</button>
-                <button className='btn btn-sm btn-secondary mr-2' onClick={() => refreshData()}>Refresh Data</button>
+                  </tbody>
+                </Table>
+                </div>
+                <Modal show={show} onHide={handleModal}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Add new row</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form className='d-flex flex-column gap-2' onSubmit={handleFormSubmit}>
+                      <Form.Group controlId="exampleForm.ControlInput1">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter value" name="field1" onChange={handleFormChange} value={formData.field1} autoFocus />
+                      </Form.Group>
+                      <Form.Group controlId="exampleForm.ControlInput2">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter value" />
+                      </Form.Group>
+                      <Form.Group controlId="exampleForm.ControlInput2">
+                        <Form.Label>Age</Form.Label>
+                        <Form.Control type="number" placeholder="Enter value" />
+                      </Form.Group>
+                      <Form.Group controlId="exampleForm.ControlInput2">
+                        <Form.Label>Status</Form.Label>
+                        <Form.Control type="text" placeholder="Enter value" />
+                      </Form.Group>
+                      <Form.Group controlId="exampleForm.ControlInput2">
+                        <Form.Label>Profile progress</Form.Label>
+                        <Form.Control type="number" placeholder="Enter value" />
+                      </Form.Group>
+                    </Form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleModal}>Cancel</Button>
+                    <Button variant="primary" onClick={handleModal}>Save changes</Button>
+                  </Modal.Footer>
+                </Modal>
               </div>
-
-              <div className='d-flex align-items-start gap-1'>
-                <button
-                  className="btn btn-sm btn-outline-primary cursor-disabled"
-                  onClick={() => table.setPageIndex(0)}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <strong>{'<<'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <strong>{'<'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <strong>{'>'}</strong>
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-primary"
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <strong>{'>>'}</strong>
-                </button>
-              </div>
-
-              <span className="d-flex gap-1">
-                <div>Page</div>
-                <strong>
-                  {table.getState().pagination.pageIndex + 1} of{' '}
-                  {table.getPageCount()}
-                </strong>
-
-                <span>
-                  | Go to page:
-                  <input
-                    type="number"
-                    defaultValue={table.getState().pagination.pageIndex + 1}
-                    onChange={e => {
-                      const page = e.target.value ? Number(e.target.value) - 1 : 0
-                      table.setPageIndex(page)
-                    }}
-                    className="border p-1 rounded w-16"
-                  />
-                </span>
-                <select
-                  className='form-select form-select-sm'
-                  value={table.getState().pagination.pageSize}
-                  onChange={e => {
-                    table.setPageSize(Number(e.target.value))
-                  }}
-                >
-                  {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                      Show {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </span>
             </div>
           </div>`}</code><code className="language-javascript">{`
   );
-};
+}
 
-function Filter({ column, table }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === "number" ? (`}</code><code className="language-markup">{`
-    <div>
-      <input
-        type="number"
-        value={columnFilterValue?.[0] ?? ""}
-        onChange={e => column.setFilterValue(old => [e.target.value, old?.[1]])}
-        placeholder={\`Min\`}
-        className="w-24 border rounded"
-      />
-      <input
-        type="number"
-        value={columnFilterValue?.[1] ?? ""}
-        onChange={e => column.setFilterValue(old => [old?.[0], e.target.value])}
-        placeholder={\`Max\`}
-        className="w-24 border rounded"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={columnFilterValue ?? ""}
-      onChange={e => column.setFilterValue(e.target.value)}
-      placeholder={\`Search...\`}
-      className="w-36 border rounded"
-    />`}</code><code className="language-javascript">{`
+`}</code><code className="language-javascript">{`
   );
 }
 
@@ -679,7 +516,13 @@ const newPerson = () => {
         visits: faker.datatype.number(1000),
         progress: faker.datatype.number(100),
         createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
-        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0]
+        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0],
+        state: faker.address.state(),
+        company: faker.company.name(),
+        phone: faker.phone.number(),
+        department: faker.commerce.department(),
+        role: faker.company.bs(),
+        account: faker.finance.accountName(),
     }
 }
 
