@@ -10,13 +10,20 @@ const range = len => {
 
 const newPerson = () => {
     return {
+        id: faker.datatype.number(100),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         age: faker.datatype.number(40),
         visits: faker.datatype.number(1000),
         progress: faker.datatype.number(100),
         createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
-        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0]
+        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0],
+        state: faker.address.state(),
+        company: faker.company.name(),
+        phone: faker.phone.number(),
+        department: faker.commerce.department(),
+        role: faker.company.bs(),
+        account: faker.finance.accountName(),
     }
 }
 

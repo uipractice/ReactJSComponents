@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Prism from "prismjs";
 import "../../prism.css";
 import "./sortabletable.css";
@@ -8,48 +8,59 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { Table } from 'react-bootstrap';
 import { makeData } from '../makeData'
 
-export const RbSortableTable = (props) => {
+export const RbSortableTable = () => {
 
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const [sorting, setSorting] = useState([])
 
-  const [sorting, setSorting] = React.useState([])
-
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
+      { accessorKey: "id", header: "ID" },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        header: "First Name",
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        header: 'Age',
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: props => props.column.id,
+        header: 'Profile Progress (%)',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'company',
+        header: 'Company',
+      },
+      {
+        accessorKey: 'phone',
+        header: 'Contact No.',
+      },
+      {
+        accessorKey: "department",
+        header: "Department"
+      },
+      {
+        accessorKey: "account",
+        header: "Account Type"
+      },
+      {
+        accessorKey: "role",
+        header: "Role Summary"
       },
       {
         accessorKey: 'createdAt',
@@ -59,8 +70,7 @@ export const RbSortableTable = (props) => {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = useState(() => makeData(10))
 
   const table = useReactTable({
     data,
@@ -71,17 +81,16 @@ export const RbSortableTable = (props) => {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
   })
 
   return (
     <div className="demo-wrapper">
-      <div style={{ marginBottom: "10px" }}>
+      <div className='mb-1'>
         Sorting functionality allows you to sort the data of the tables
         according to any specific columns.
       </div>
-      <div style={{ marginRight: "20px" }}>
-        <table className='table'>
+      <div className="mr-2 scrollable-vertical scrollable-horizontal">
+        <Table>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id} className='table-primary'>
@@ -92,7 +101,7 @@ export const RbSortableTable = (props) => {
                         <div
                           {...{
                             className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
+                              ? 'cursor-pointer select-none column-width'
                               : '',
                             onClick: header.column.getToggleSortingHandler(),
                           }}
@@ -134,14 +143,8 @@ export const RbSortableTable = (props) => {
                 )
               })}
           </tbody>
-        </table>
-        <div className='d-flex gap-1'>
-          <button className='btn btn-sm btn-primary' onClick={() => rerender()}>Force Rerender</button>
-          <button className='btn btn-sm btn-secondary' onClick={() => refreshData()}>Refresh Data</button>
-        </div>
+        </Table>
       </div>
-
-
       <div className="compo-description">
         <h4>Description</h4>
         <p>
@@ -180,10 +183,10 @@ export const RbSortableTableCode = () => {
   return (
     <div className="jsx-code-wrapper">
       <h4>React Bootstrap code</h4>
-      <pre style={{ marginRight: "20px", background: "#fff" }}>
+      <pre className='pre-code'>
         <code className="language-javascript">
           {` <=======RbSortableTable.js=======>
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Prism from "prismjs";
 import "../../prism.css";
 import "./sortabletable.css";
@@ -202,38 +205,50 @@ export const RbSortableTable = (props) => {
 
   const columns = React.useMemo(
     () => [
+      { accessorKey: "id", header: "ID" },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        header: "First Name",
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        header: 'Age',
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: props => props.column.id,
+        header: 'Profile Progress (%)',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'company',
+        header: 'Company',
+      },
+      {
+        accessorKey: 'phone',
+        header: 'Contact No.',
+      },
+      {
+        accessorKey: "department",
+        header: "Department"
+      },
+      {
+        accessorKey: "account",
+        header: "Account Type"
+      },
+      {
+        accessorKey: "role",
+        header: "Role Summary"
       },
       {
         accessorKey: 'createdAt',
@@ -243,8 +258,7 @@ export const RbSortableTable = (props) => {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = useState(() => makeData(10))
 
   const table = useReactTable({
     data,
@@ -260,70 +274,67 @@ export const RbSortableTable = (props) => {
 
   return (`}{" "}
         </code>
-        <code className="language-markup">{
-          `<div style={{ marginBottom: "10px" }}>
+        <code className="language-markup">{`
+    <div className="mb-2">
      The Pagination component enables the user to select a specific page from a range of pages.
     </div>
-    <div style={{ marginRight: "20px" }}>
-    <table className='table'>
-    <thead>
-      {table.getHeaderGroups().map(headerGroup => (
-        <tr key={headerGroup.id} className='table-primary'>
-          {headerGroup.headers.map(header => {
+    <div className="mr-2 scrollable-vertical scrollable-horizontal">
+    <Table>
+      <thead>
+        {table.getHeaderGroups().map(headerGroup => (
+          <tr key={headerGroup.id} className='table-primary'>
+            {headerGroup.headers.map(header => {
+              return (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? 'cursor-pointer select-none'
+                          : '',
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                      >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {{
+                        asc: ' 🔼',
+                        desc: ' 🔽',
+                      }[header.column.getIsSorted()] ?? null}
+                    </div>
+                  )}
+                </th>
+              )
+            })}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table
+          .getRowModel()
+          .rows.slice(0, 10)
+          .map(row => {
             return (
-              <th key={header.id} colSpan={header.colSpan}>
-                {header.isPlaceholder ? null : (
-                  <div
-                    {...{
-                      className: header.column.getCanSort()
-                        ? 'cursor-pointer select-none'
-                        : '',
-                      onClick: header.column.getToggleSortingHandler(),
-                    }}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {{
-                      asc: ' 🔼',
-                      desc: ' 🔽',
-                    }[header.column.getIsSorted()] ?? null}
-                  </div>
-                )}
-              </th>
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => {
+                  return (
+                    <td key={cell.id} className='column-width'>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
             )
           })}
-        </tr>
-      ))}
-    </thead>
-    <tbody>
-      {table
-        .getRowModel()
-        .rows.slice(0, 10)
-        .map(row => {
-          return (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => {
-                return (
-                  <td key={cell.id} className='column-width'>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-    </tbody>
-  </table>
-  <div className='d-flex gap-1'>
-    <button className='btn btn-sm btn-primary' onClick={() => rerender()}>Force Rerender</button>
-    <button className='btn btn-sm btn-secondary' onClick={() => refreshData()}>Refresh Data</button>
-  </div>
+        </tbody>
+      </Table>
     </div>
+  </div>
     )
 }`}
         </code>
@@ -350,7 +361,13 @@ const newPerson = () => {
         visits: faker.datatype.number(1000),
         progress: faker.datatype.number(100),
         createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
-        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0]
+        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0],
+        state: faker.address.state(),
+        company: faker.company.name(),
+        phone: faker.phone.number(),
+        department: faker.commerce.department(),
+        role: faker.company.bs(),
+        account: faker.finance.accountName(),
     }
 }
 
