@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import MaterialReactTable from 'material-react-table';
-import { Box, Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import Prism from "prismjs";
@@ -95,10 +95,6 @@ export const MatExportExcel = () => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };
-
     const handleExportData = () => {
         csvExporter.generateCsv(data);
     };
@@ -113,20 +109,15 @@ export const MatExportExcel = () => {
                 data={data}
                 enableRowSelection
                 positionToolbarAlertBanner="bottom"
-                renderTopToolbarCustomActions={({ table }) => (
-                    <Box
-                        sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+                renderTopToolbarCustomActions={() => (
+                    <Button
+                        color="primary"
+                        onClick={handleExportData}
+                        startIcon={<FileDownloadIcon />}
+                        variant="contained"
                     >
-                        <Button
-                            color="primary"
-                            onClick={handleExportData}
-                            startIcon={<FileDownloadIcon />}
-                            variant="contained"
-                        >
-                            Export to Excel
-                        </Button>
-
-                    </Box>
+                        Export to Excel
+                    </Button>
                 )}
             />
             <div className="compo-description">
@@ -262,10 +253,6 @@ const MatExportExcel = () => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };
-
     const handleExportData = () => {
         csvExporter.generateCsv(data);
     };
@@ -280,10 +267,7 @@ const MatExportExcel = () => {
             data={data}
             enableRowSelection
             positionToolbarAlertBanner="bottom"
-            renderTopToolbarCustomActions={({ table }) => (
-                <Box
-                    sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-                >
+            renderTopToolbarCustomActions={() => (
                     <Button
                         color="primary"
                         //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -293,38 +277,6 @@ const MatExportExcel = () => {
                     >
                         Export All Data
                     </Button>
-                    <Button
-                        disabled={table.getPrePaginationRowModel().rows.length === 0}
-                        //export all rows, including from the next page, (still respects filtering and sorting)
-                        onClick={() =>
-                            handleExportRows(table.getPrePaginationRowModel().rows)
-                        }
-                        startIcon={<FileDownloadIcon />}
-                        variant="contained"
-                    >
-                        Export All Rows
-                    </Button>
-                    <Button
-                        disabled={table.getRowModel().rows.length === 0}
-                        //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                        onClick={() => handleExportRows(table.getRowModel().rows)}
-                        startIcon={<FileDownloadIcon />}
-                        variant="contained"
-                    >
-                        Export Page Rows
-                    </Button>
-                    <Button
-                        disabled={
-                            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                        }
-                        //only export selected rows
-                        onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-                        startIcon={<FileDownloadIcon />}
-                        variant="contained"
-                    >
-                        Export Selected Rows
-                    </Button>
-                </Box>
         />
             `}
                 </code>
@@ -335,51 +287,6 @@ const MatExportExcel = () => {
         };
 
 export default MatExportExcel;
-
-<=============makeData.js===============>
-
-import { faker } from "@faker-js/faker"
-
-const range = len => {
-    const arr = []
-    for (let i = 0; i < len; i++) {
-        arr.push(i)
-    }
-    return arr
-}
-
-const newPerson = () => {
-    return {
-        id: faker.datatype.number(100),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        age: faker.datatype.number(40),
-        visits: faker.datatype.number(1000),
-        progress: faker.datatype.number(100),
-        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0],
-        state: faker.address.state(),
-        company: faker.company.name(),
-        phone: faker.phone.number(),
-        department: faker.commerce.department(),
-        account: faker.finance.accountName(),
-        role: faker.company.bs(),
-        createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
-    }
-}
-
-export function makeData(...lens) {
-    const makeDataLevel = (depth = 0) => {
-        const len = lens[depth]
-        return range(len).map(d => {
-            return {
-                ...newPerson()
-            }
-        })
-    }
-
-    return makeDataLevel()
-}
-
         `}
                 </code>
             </pre>
