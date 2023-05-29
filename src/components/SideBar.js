@@ -184,6 +184,11 @@ function SideBar(props) {
                     <NavLink to='/pagination' style={{ textDecoration: 'none' }}>Pagination</NavLink>
                   </summary>
                 </details>
+                <details className="details">
+                  <summary className="summary summary1">
+                    <NavLink to='/pdfviewer' style={{ textDecoration: 'none' }}>PDF Viewer</NavLink>
+                  </summary>
+                </details>
               </details>
             </section>
             <section>

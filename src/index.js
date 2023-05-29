@@ -36,6 +36,7 @@ import BadgeContainer from './components/basic/Badge/BadgeContainer';
 import ButtonGroupContainer from './components/basic/ButtonGroup/ButtonGroupContainer';
 import ExportExcelContainer from './components/tables/ExportExcelTable/ExportExcelContainer';
 import ExportPdfContainer from './components/tables/ExportPdfTable/ExportPdfContainer';
+import PdfViewerContainer from './components/utility/PdfViewer/PdfViewerContainer';
 
 const routing = (
   <Router>
@@ -72,6 +73,7 @@ const routing = (
       <Route path='/buttongroup' component={ButtonGroupContainer} />
       <Route path='/exportexceltable' component={ExportExcelContainer} />
       <Route path='/exportpdftable' component={ExportPdfContainer} />
+      <Route path='/pdfviewer' component={PdfViewerContainer} />
     </div>
   </Router>
 )
