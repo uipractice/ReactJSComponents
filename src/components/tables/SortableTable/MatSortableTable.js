@@ -121,7 +121,7 @@ export const MatSortableTableCode = () => {
     <>
       <div className='jsx-code-wrapper'>
         <h4>React Material UI code</h4>
-        <pre style={{ marginRight: '20px', background: '#fff' }}>
+        <pre className="pre-code">
           <code className='language-javascript'>{`
 import React, { useEffect, useMemo } from "react";
 import MaterialReactTable from 'material-react-table';

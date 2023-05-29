@@ -113,7 +113,7 @@ export const RbSortableTable = () => {
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
-                          }[header.column.getIsSorted()] ?? null}
+                          }[header.column.getIsSorted()] ?? <span className='empty-space'></span>}
                         </div>
                       )}
                     </th>
@@ -196,6 +196,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { Table } from 'react-bootstrap';
 import { makeData } from '../makeData'
 
 export const RbSortableTable = (props) => {
@@ -290,7 +291,7 @@ export const RbSortableTable = (props) => {
                     <div
                       {...{
                         className: header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
+                          ? 'cursor-pointer select-none column-width'
                           : '',
                         onClick: header.column.getToggleSortingHandler(),
                       }}
@@ -302,7 +303,7 @@ export const RbSortableTable = (props) => {
                       {{
                         asc: ' 🔼',
                         desc: ' 🔽',
-                      }[header.column.getIsSorted()] ?? null}
+                      }[header.column.getIsSorted()] ?? <span className="empty-space"></span>}
                     </div>
                   )}
                 </th>
