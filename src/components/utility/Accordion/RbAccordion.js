@@ -7,14 +7,12 @@ import '../../prism.css';
 import './RbAccordion.scss';
 
 function CustomToggle({ children, eventKey }) {
-  const decoratedOnClick = useAccordionButton(eventKey, () =>
-    console.log('totally custom!'),
-  );
+  const decoratedOnClick = useAccordionButton(eventKey);
 
   return (
     <button
       type="button"
-      style={{ backgroundColor: '#0097e8', color: "#ffffff" }}
+      className='btn btn-sm btn-primary'
       onClick={decoratedOnClick}
     >
       {children}
@@ -25,8 +23,8 @@ function CustomToggle({ children, eventKey }) {
 function RbAccordion() {
   return (
     <div className='demo-wrapper rb-accordion-class'>
-      <div style={{ marginBottom: '10px' }}>{`Basic Accordion`}</div>
-      <div style={{ width: '600px' }}>
+      <div className='mb-1'>{`Basic Accordion`}</div>
+      <div className='w-75'>
         <Accordion defaultActiveKey="0">
           <Accordion.Item eventKey="0">
             <Accordion.Header>Accordion Item #1</Accordion.Header>
@@ -107,7 +105,7 @@ function RbAccordion() {
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
-        <div style={{ marginTop: '10px', marginBottom: '10px' }}>{`Custom Accordion`}</div>
+        <div className='my-1'>{`Custom Accordion`}</div>
         <Accordion defaultActiveKey="0">
           <Card>
             <Card.Header>
