@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ToggleView from "../../util/ToggleView";
-// import { RbSortableTable, RbSortableTableCode } from "./RbSortableTable";
-// import {
-//   MatSortableTable,
-//   MatSortableTableCode,
-// } from "./MatSortableTable";
 import { MatExportExcel, MatExportExcelCode } from './MatExportExcel';
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -16,7 +11,7 @@ const ExportExcelComponent = (props) => {
 
     return (
         <div className="btnCompoWrap">
-            <h3 className="btn-title">Sortable Table</h3>
+            <h3 className="btn-title">Export Excel Table</h3>
             <ToggleView
                 onChange={(ev) =>
                     ev === "react" ? setMatview(false) : setMatview(true)
