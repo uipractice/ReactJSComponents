@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useReducer } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import "../../prism.css";
 import Prism from "prismjs";
 import {
@@ -8,47 +8,40 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
-  getPaginationRowModel,
-  sortingFns,
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table"
-
-import { rankItem, compareItems } from "@tanstack/match-sorter-utils"
-
 import { makeData } from "../makeData"
+import { Table } from 'react-bootstrap';
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value)
+  const cellValue = row.getValue(columnId);
 
-  // Store the itemRank info
-  addMeta({
-    itemRank
-  })
+  // Prepare the regular expression pattern to match the query exactly and in order
+  const escapedValue = escapeRegExp(value);
+  const pattern = escapedValue
+    .split('')
+    .map((char) => (char === ' ' ? '\\s?' : escapeRegExp(char)))
+    .join('');
 
-  // Return if the item should be filtered in/out
-  return itemRank.passed
-}
+  // Create a regular expression using the constructed pattern with the 'i' flag for case insensitivity
+  const queryRegex = new RegExp(pattern, 'i');
 
-const fuzzySort = (rowA, rowB, columnId) => {
-  let dir = 0
+  // Check if the cell value matches the query exactly and in order
+  const passed = queryRegex.test(cellValue);
 
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank,
-      rowB.columnFiltersMeta[columnId]?.itemRank
-    )
-  }
+  // Store the filter result in the metadata
+  addMeta({ passed });
 
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
-}
+  return passed;
+};
 
-export const RbFilterTable = (props) => {
+// Helper function to escape special characters in the query
+const escapeRegExp = (string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
 
-  const rerender = useReducer(() => ({}), {})[1]
+export const RbFilterTable = () => {
 
   const [columnFilters, setColumnFilters] = useState([])
   const [globalFilter, setGlobalFilter] = useState("")
@@ -56,45 +49,52 @@ export const RbFilterTable = (props) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        accessorKey: "id",
+        header: "ID"
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        accessorKey: 'firstName',
+        header: "First Name",
+      },
+      {
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        header: "Visits",
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'company',
+        header: 'Company',
       },
     ],
     []
   )
 
-  const [data, setData] = useState(() => makeData(50000))
-  const refreshData = () => setData(old => makeData(50000))
+  const [data, setData] = useState(() => makeData(50))
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter
+      fuzzy: fuzzyFilter,
     },
     state: {
       columnFilters,
@@ -106,27 +106,18 @@ export const RbFilterTable = (props) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   })
 
-  useEffect(() => {
-    if (table.getState().columnFilters[0]?.id === "fullName") {
-      if (table.getState().sorting[0]?.id !== "fullName") {
-        table.setSorting([{ id: "fullName", desc: false }])
-      }
-    }
-  }, [table.getState().columnFilters[0]?.id])
-
   return (
     <>
       <div className="demo-wrapper">
-        <div style={{ marginBottom: "10px" }}>
+        <div className='mb-2'>
           Filter Table with Dynamically fetched data from 3rd party API
         </div>
-        <div style={{ marginRight: "20px" }}>
+        <div className='mr-2'>
           <div className='mb-2'>
             <DebouncedInput
               value={globalFilter ?? ""}
@@ -135,138 +126,65 @@ export const RbFilterTable = (props) => {
               placeholder="Search all columns..."
             />
           </div>
-          <table className='table'>
-            <thead>
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id} className='table-primary'>
-                  {headerGroup.headers.map(header => {
-                    return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <>
-                            <div
-                              {...{
-                                className: header.column.getCanSort()
-                                  ? "cursor-pointer select-none"
-                                  : "",
-                                onClick: header.column.getToggleSortingHandler()
-                              }}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {{
-                                asc: " 🔼",
-                                desc: " 🔽"
-                              }[header.column.getIsSorted()] ?? null}
-                            </div>
-                            {header.column.getCanFilter() ? (
-                              <div>
-                                <Filter column={header.column} table={table} />
-                              </div>
-                            ) : null}
-                          </>
-                        )}
-                      </th>
-                    )
-                  })}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map(row => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map(cell => {
+          <div className="scrollable-vertical scrollable-horizontal">
+            <Table>
+              <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id} className='table-primary'>
+                    {headerGroup.headers.map(header => {
                       return (
-                        <td key={cell.id} className='column-width'>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                        <th key={header.id} colSpan={header.colSpan} className='column-width'>
+                          {header.isPlaceholder ? null : (
+                            <>
+                              <div
+                                {...{
+                                  className: header.column.getCanSort()
+                                    ? "cursor-pointer select-none"
+                                    : "",
+                                  onClick: header.column.getToggleSortingHandler()
+                                }}
+                              >
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                                {{
+                                  asc: " 🔼",
+                                  desc: " 🔽"
+                                }[header.column.getIsSorted()] ?? null}
+                              </div>
+                              {header.column.getCanFilter() ? (
+                                <div className='column-width'>
+                                  <Filter column={header.column} table={table} />
+                                </div>
+                              ) : null}
+                            </>
                           )}
-                        </td>
+                        </th>
                       )
                     })}
                   </tr>
-                )
-              })}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <button className='btn btn-sm btn-primary mr-2' onClick={() => rerender()}>Force Rerender</button>
-              <button className='btn btn-sm btn-secondary mr-2' onClick={() => refreshData()}>Refresh Data</button>
-            </div>
-
-            <div className="d-flex align-items-center">
-              <button
-                className="btn btn-sm btn-outline-primary me-1"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <strong>{'<<'}</strong>
-              </button>
-              <button
-                className="btn btn-sm btn-outline-primary me-1"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <strong>{'<'}</strong>
-              </button>
-              <button
-                className="btn btn-sm btn-outline-primary me-1"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <strong>{'>'}</strong>
-              </button>
-              <button
-                className="btn btn-sm btn-outline-primary me-1"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <strong>{'>>'}</strong>
-              </button>
-
-              <span className="me-2">
-                <div className="d-inline-block">Page</div>
-                <strong className="mx-1">
-                  {table.getState().pagination.pageIndex + 1} of{' '}
-                  {table.getPageCount()}
-                </strong>
-              </span>
-
-              <span className="me-2">
-                <div className="d-inline-block">Go to page:</div>
-                <input
-                  type="number"
-                  defaultValue={table.getState().pagination.pageIndex + 1}
-                  onChange={e => {
-                    const page = e.target.value ? Number(e.target.value) - 1 : 0
-                    table.setPageIndex(page)
-                  }}
-                  className="form-control form-control-sm d-inline-block mx-1"
-                  style={{ width: '70px' }}
-                />
-              </span>
-
-              <span>
-                <select
-                  className='form-select form-select-sm'
-                  value={table.getState().pagination.pageSize}
-                  onChange={e => {
-                    table.setPageSize(Number(e.target.value))
-                  }}
-                >
-                  {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                      Show {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </span>
-            </div>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map(row => {
+                  return (
+                    <tr key={row.id}>
+                      {row.getAllCells().map(cell => {
+                        return (
+                          <td key={cell.id} className='column-width'>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
           </div>
         </div>
         <div className="compo-description">
@@ -318,6 +236,7 @@ export const RbFilterTable = (props) => {
   )
 }
 
+
 function Filter({ column, table }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -334,39 +253,36 @@ function Filter({ column, table }) {
   )
 
   return typeof firstValue === "number" ? (
-    <div>
-      <div className='input-group input-group-sm'>
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={columnFilterValue?.[0] ?? ""}
-          onChange={value => column.setFilterValue(old => [value, old?.[1]])}
-          placeholder={`Min ${column.getFacetedMinMaxValues()?.[0]
-            ? `(${column.getFacetedMinMaxValues()?.[0]})`
-            : ""
-            }`}
-          className="form-control form-control-sm"
-        />
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={columnFilterValue?.[1] ?? ""}
-          onChange={value => column.setFilterValue(old => [old?.[0], value])}
-          placeholder={`Max ${column.getFacetedMinMaxValues()?.[1]
-            ? `(${column.getFacetedMinMaxValues()?.[1]})`
-            : ""
-            }`}
-          className="form-control form-control-sm"
-        />
-      </div>
-      <div className="h-1" />
+    <div className='input-group input-group-sm'>
+      <DebouncedInput
+        type="number"
+        min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
+        max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
+        value={columnFilterValue?.[0] ?? ""}
+        onChange={value => column.setFilterValue(old => [value, old?.[1]])}
+        placeholder={`Min ${column.getFacetedMinMaxValues()?.[0]
+          ? `(${column.getFacetedMinMaxValues()?.[0]})`
+          : ""
+          }`}
+        className="form-control form-control-sm"
+      />
+      <DebouncedInput
+        type="number"
+        min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
+        max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
+        value={columnFilterValue?.[1] ?? ""}
+        onChange={value => column.setFilterValue(old => [old?.[0], value])}
+        placeholder={`Max ${column.getFacetedMinMaxValues()?.[1]
+          ? `(${column.getFacetedMinMaxValues()?.[1]})`
+          : ""
+          }`}
+        className="form-control form-control-sm"
+      />
     </div>
   ) : (
     <>
       <datalist id={column.id + "list"}>
-        {sortedUniqueValues.slice(0, 5000).map(value => (
+        {sortedUniqueValues.slice(0, 50).map(value => (
           <option value={value} key={value} />
         ))}
       </datalist>
@@ -378,7 +294,6 @@ function Filter({ column, table }) {
         className="form-control form-control-sm"
         list={column.id + "list"}
       />
-      <div className="h-1" />
     </>
   )
 }
@@ -414,7 +329,7 @@ export const RbFilterTableCode = () => {
   return (
     <div className="jsx-code-wrapper">
       <h4>React Bootstrap code</h4>
-      <pre style={{ marginRight: "20px", background: "#fff" }}>
+      <pre className='pre-code'>
         <code className="language-javascript">{`
 import React, { useState, useEffect, useMemo, useReducer } from 'react'
 import {
@@ -430,40 +345,36 @@ import {
   flexRender,
 } from "@tanstack/react-table"
 
-import { rankItem, compareItems } from "@tanstack/match-sorter-utils"
-
 import { makeData } from "../makeData"
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value)
+  const cellValue = row.getValue(columnId);
 
-  // Store the itemRank info
-  addMeta({
-    itemRank
-  })
+  // Prepare the regular expression pattern to match the query exactly and in order
+  const escapedValue = escapeRegExp(value);
+  const pattern = escapedValue
+    .split('')
+    .map((char) => (char === ' ' ? '\\\\s?' : escapeRegExp(char)))
+    .join('');
 
-  // Return if the item should be filtered in/out
-  return itemRank.passed
-}
+  // Create a regular expression using the constructed pattern with the 'i' flag for case insensitivity
+  const queryRegex = new RegExp(pattern, 'i');
 
-const fuzzySort = (rowA, rowB, columnId) => {
-  let dir = 0
+  // Check if the cell value matches the query exactly and in order
+  const passed = queryRegex.test(cellValue);
 
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank,
-      rowB.columnFiltersMeta[columnId]?.itemRank
-    )
-  }
+  // Store the filter result in the metadata
+  addMeta({ passed });
 
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
-}
+  return passed;
+};
+
+// Helper function to escape special characters in the query
+const escapeRegExp = (string) => {
+  return string.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$&');
+};
 
 export const RbFilterTable = (props) => {
-  const rerender = useReducer(() => ({}), {})[1]
 
   const [columnFilters, setColumnFilters] = useState([])
   const [globalFilter, setGlobalFilter] = useState("")
@@ -471,44 +382,46 @@ export const RbFilterTable = (props) => {
   const columns = useMemo(
     () => [
       {
+        accessorKey: "id",
+        header: "ID"
+      },
+      {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        header: () => <span>First Name</span>,
-        footer: props => props.column.id,
+        header: "First Name",
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
+        accessorKey: 'lastName',
+        header: "Last Name",
       },
       {
         accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        header: "Visits",
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'company',
+        header: 'Company',
       },
     ],
     []
   )
 
-  const [data, setData] = useState(() => makeData(50000))
-  const refreshData = () => setData(old => makeData(50000))
+  const [data, setData] = useState(() => makeData(50))
 
   const table = useReactTable({
     data,
@@ -532,162 +445,82 @@ export const RbFilterTable = (props) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   })
 
-  useEffect(() => {
-    if (table.getState().columnFilters[0]?.id === "fullName") {
-      if (table.getState().sorting[0]?.id !== "fullName") {
-        table.setSorting([{ id: "fullName", desc: false }])
-      }
-    }
-  }, [table.getState().columnFilters[0]?.id])
-  
-
   return (`} </code>
         <code className="language-markup">{`
       <>
-        <div style={{ marginBottom: "10px" }}>
+        <div className="mb-1">
           Filter Table with Dynamically fetched data from 3rd party API
         </div>
-        <div style={{ marginRight: "20px" }}>
-        <div className='mb-2'>
-        <DebouncedInput
-          value={globalFilter ?? ""}
-          onChange={value => setGlobalFilter(String(value))}
-          className="p-2 font-lg border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
-      <table className='table'>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+        <div className="mr-2">
+          <div className='mb-2'>
+            <DebouncedInput
+              value={globalFilter ?? ""}
+              onChange={value => setGlobalFilter(String(value))}
+              className="p-2 font-lg border border-block"
+              placeholder="Search all columns..."
+            />
+          </div>
+          <Table>
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <>
+                            <div
+                              {...{
+                                className: header.column.getCanSort()
+                                  ? "cursor-pointer select-none"
+                                  : "",
+                                onClick: header.column.getToggleSortingHandler()
+                              }}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {{
+                                asc: " 🔼",
+                                desc: " 🔽"
+                              }[header.column.getIsSorted()] ?? null}
+                            </div>
+                            {header.column.getCanFilter() ? (
+                              <div>
+                                <Filter column={header.column} table={table} />
+                              </div>
+                            ) : null}
+                          </>
+                        )}
+                      </th>
+                    )
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler()
-                          }}
-                        >
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map(cell => {
+                      return (
+                        <td key={cell.id}>
                           {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
+                            cell.column.columnDef.cell,
+                            cell.getContext()
                           )}
-                          {{
-                            asc: " 🔼",
-                            desc: " 🔽"
-                          }[header.column.getIsSorted()] ?? null}
-                        </div>
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                  </th>
+                        </td>
+                      )
+                    })}
+                  </tr>
                 )
               })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
-                  return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-      <div className="d-flex justify-content-between">
-        <div>
-          <button className='btn btn-sm btn-primary mr-2' onClick={() => rerender()}>Force Rerender</button>
-          <button className='btn btn-sm btn-secondary mr-2' onClick={() => refreshData()}>Refresh Data</button>
-        </div>
-
-        <div className='d-flex align-items-start gap-1'>
-          <button
-            className="btn btn-sm btn-outline-primary cursor-disabled"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <strong>{'<<'}</strong>
-          </button>
-          <button
-            className="btn btn-sm btn-outline-primary"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <strong>{'<'}</strong>
-          </button>
-          <button
-            className="btn btn-sm btn-outline-primary"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <strong>{'>'}</strong>
-          </button>
-          <button
-            className="btn btn-sm btn-outline-primary"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <strong>{'>>'}</strong>
-          </button>
-        </div>
-
-        <span className="d-flex justify-content-between gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-
-          <span className="flex items-center gap-1">
-            | Go to page:
-            <input
-              type="number"
-              defaultValue={table.getState().pagination.pageIndex + 1}
-              onChange={e => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                table.setPageIndex(page)
-              }}
-              className="border p-1 rounded w-16"
-            />
-          </span>
-          <select
-            className='form-select form-select-sm'
-            value={table.getState().pagination.pageSize}
-            onChange={e => {
-              table.setPageSize(Number(e.target.value))
-            }}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </span>
-      </div>
+            </tbody>
+          </Table>
         </div>
       </>
-  )
+    )
 }`}</code><code className="language-javascript">{`
 
 function Filter({ column, table }) {
@@ -706,8 +539,7 @@ function Filter({ column, table }) {
   )
 
   return typeof firstValue === "number" ? (`}</code><code className="language-markup">{`
-    <div>
-      <div className="flex space-x-2">
+      <div className='input-group input-group-sm'>
         <DebouncedInput
           type="number"
           min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
@@ -718,7 +550,7 @@ function Filter({ column, table }) {
             ? \`(\${column.getFacetedMinMaxValues()?.[0]})\`
             : ""
             }\`}
-          className="w-24 border rounded"
+          className="form-control form-control-sm"
         />
         <DebouncedInput
           type="number"
@@ -730,11 +562,9 @@ function Filter({ column, table }) {
             ? \`(\${column.getFacetedMinMaxValues()?.[1]})\`
             : ""
             }\`}
-          className="w-24 border rounded"
+          className="form-control form-control-sm"
         />
       </div>
-      <div className="h-1" />
-    </div>
   ) : (
     <>
       <datalist id={column.id + "list"}>
@@ -747,10 +577,9 @@ function Filter({ column, table }) {
         value={columnFilterValue ?? ""}
         onChange={value => column.setFilterValue(value)}
         placeholder={\`Search... (\${column.getFacetedUniqueValues().size})\`}
-        className="w-36 border rounded"
+        className="form-control form-control-sm"
         list={column.id + "list"}
       />
-      <div className="h-1" />
     </>`}</code><code className="language-javascript">{`
   )
 }
@@ -762,7 +591,7 @@ function DebouncedInput({
   debounce = 500,
   ...props
 }) {
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = useState(initialValue)
 
   React.useEffect(() => {
     setValue(initialValue)
@@ -805,7 +634,13 @@ const newPerson = () => {
         visits: faker.datatype.number(1000),
         progress: faker.datatype.number(100),
         createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
-        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0]
+        status: faker.helpers.shuffle(["accepted", "rejected", "in process"])[0],
+        state: faker.address.state(),
+        company: faker.company.name(),
+        phone: faker.phone.number(),
+        department: faker.commerce.department(),
+        role: faker.company.bs(),
+        account: faker.finance.accountName(),
     }
 }
 
