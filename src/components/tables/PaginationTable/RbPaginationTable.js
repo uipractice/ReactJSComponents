@@ -67,7 +67,7 @@ export const RbPaginationTable = () => {
     []
   )
 
-  const [data, setData] = useState(() => makeData(100))
+  const [data, setData] = useState(() => makeData(50))
 
   let currentPage = 1
   const pageSize = 10;
@@ -135,13 +135,13 @@ export const RbPaginationTable = () => {
               {tableRows.map(row => {
                 return (
                   <tr key={row.id}>
-                    {row.getVisibleCells().map(cell => {
+                    {row.getVisibleCells().map((cell, index) => {
                       return (
-                        <td key={cell.id} className='column-width'>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                        <td
+                          key={cell.id}
+                          className={index === row.getVisibleCells().length - 1 ? 'column-end-width' : 'column-width'}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       )
                     })}
