@@ -111,12 +111,34 @@ const RbEditableTable = () => {
             return row
           })
         )
+      },
+      deleteRow: rowIndex => {
+        const newData = rowData.filter((row, index) => index !== rowIndex);
+        setRowData(newData);
+        return newData;
+      },
+      addNewRow: newRow => {
+        setData(old => {
+          const newData = [...old, newRow];
+          console.log("updated data===>", newData)
+          return newData;
+        });
+        setRowData(old => {
+          const newRowData = [...old, newRow];
+          console.log("updated rowData====>", newRowData)
+          return newRowData
+        });
+
       }
     },
   })
 
+  useEffect(() => {
+    setData(data);
+  }, [data]);
+
   const [rowData, setRowData] = useState(table.getRowModel().rows);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', age: '', status: '', profileProgress: '', });
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -128,20 +150,11 @@ const RbEditableTable = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setRowData((prevRowData) => [
-      ...prevRowData,
-      { id: Date.now(), ...formData },
-    ]);
+    table.options.meta.addNewRow({ id: Date.now(), ...formData });
+    console.log('handleFormSubmit called with formData:', formData);
     setFormData({});
     setShow(false);
   };
-
-  const handleDelete = (e, data) => {
-    let filtered = table.getRowModel().rows.filter(i => {
-      return i.id !== data.id
-    })
-    setRowData(filtered);
-  }
 
   const [show, setShow] = useState(false);
 
@@ -181,16 +194,23 @@ const RbEditableTable = () => {
                   ))}
                 </thead>
                 <tbody>
-                  {rowData.map(row => {
+                  {rowData.map((row, index) => {
                     return (
                       <tr key={row.id}>
                         <td>
                           <span className="btn-group">
-                            <button className='btn btn-sm btn-outline-danger' onClick={(e) => handleDelete(e, row)}>Delete</button>
+                            <button className='btn btn-sm btn-outline-danger'
+                              onClick={() => {
+                                const newData = table.options.meta?.deleteRow(index);
+                                setData(newData);
+                              }}
+                            >Delete</button>
                             <button className="btn btn-sm btn-outline-secondary edit-button">Edit</button>
                           </span>
                         </td>
                         {row.getVisibleCells().slice(1).map(cell => {
+                          console.log("Row:", row)
+                          console.log("row.getvisiblecells:", row.getVisibleCells())
                           return (
                             <td key={cell.id} className='hover-indicate'>
                               {flexRender(
@@ -204,6 +224,7 @@ const RbEditableTable = () => {
                     )
                   })}
                 </tbody>
+                {/* {console.log("current data===>", data, rowData)} */}
               </Table>
             </div>
             <Modal show={show} onHide={handleModal}>
@@ -214,29 +235,29 @@ const RbEditableTable = () => {
                 <Form className='d-flex flex-column gap-2' onSubmit={handleFormSubmit}>
                   <Form.Group controlId="exampleForm.ControlInput1">
                     <Form.Label>First Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter value" name="field1" onChange={handleFormChange} value={formData.field1} autoFocus />
+                    <Form.Control type="text" placeholder="Enter value" name="firstName" value={formData.firstName} onChange={handleFormChange} autoFocus />
                   </Form.Group>
                   <Form.Group controlId="exampleForm.ControlInput2">
                     <Form.Label>Last Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter value" />
+                    <Form.Control type="text" placeholder="Enter value" name="lastName" value={formData.lastName} onChange={handleFormChange} />
                   </Form.Group>
                   <Form.Group controlId="exampleForm.ControlInput2">
                     <Form.Label>Age</Form.Label>
-                    <Form.Control type="number" placeholder="Enter value" />
+                    <Form.Control type="number" placeholder="Enter value" name="age" value={formData.age} onChange={handleFormChange} />
                   </Form.Group>
                   <Form.Group controlId="exampleForm.ControlInput2">
                     <Form.Label>Status</Form.Label>
-                    <Form.Control type="text" placeholder="Enter value" />
+                    <Form.Control type="text" placeholder="Enter value" name="status" value={formData.status} onChange={handleFormChange} />
                   </Form.Group>
                   <Form.Group controlId="exampleForm.ControlInput2">
                     <Form.Label>Profile progress</Form.Label>
-                    <Form.Control type="number" placeholder="Enter value" />
+                    <Form.Control type="number" placeholder="Enter value" name="profileProgress" value={formData.profileProgress} onChange={handleFormChange} />
                   </Form.Group>
                 </Form>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleModal}>Cancel</Button>
-                <Button variant="primary" onClick={handleModal}>Save changes</Button>
+                <Button variant="primary" onClick={handleFormSubmit}>Save changes</Button>
               </Modal.Footer>
             </Modal>
           </div>
