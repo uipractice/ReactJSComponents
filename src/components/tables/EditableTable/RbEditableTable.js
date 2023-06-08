@@ -9,55 +9,55 @@ import {
 import { makeData } from '../makeData';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 
-const useCellRef = () => {
-  const cellRef = useRef(null)
-  return cellRef;
-}
-
-function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
-  const initialValue = getValue();
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = useState(initialValue);
-
-  // When the input is blurred, we'll call our table meta's updateData function
-  const onBlur = () => {
-    table.options.meta?.updateData(index, id, value);
-  };
-
-  // If the initialValue is changed external, sync it up with our state
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-
-  return {
-    value,
-    setValue,
-    onBlur,
-  };
-}
-
-const defaultColumn = {
-  cell: function Cell(props) {
-    const { value, setValue, onBlur } = useDefaultColumn(props);
-    return (
-      <input
-        className='form-control form-control-sm border-none column-width'
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={onBlur}
-        ref={useCellRef()}
-      />
-    );
-  },
-};
-
 const RbEditableTable = () => {
+
+  const useCellRef = () => {
+    const cellRef = useRef(null)
+    return cellRef;
+  }
+
+  function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
+    const initialValue = getValue();
+    // We need to keep and update the state of the cell normally
+    const [value, setValue] = useState(initialValue);
+
+    // When the input is blurred, we'll call our table meta's updateData function
+    const onBlur = () => {
+      table.options.meta?.updateData(index, id, value);
+    };
+
+    // If the initialValue is changed external, sync it up with our state
+    useEffect(() => {
+      setValue(initialValue);
+    }, [initialValue]);
+
+
+    return {
+      value,
+      setValue,
+      onBlur,
+    };
+  }
+
+  const defaultColumn = {
+    cell: function Cell(props) {
+      const { value, setValue, onBlur } = useDefaultColumn(props);
+      return (
+        <input
+          className='form-control form-control-sm border-none column-width'
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+          ref={useCellRef()}
+        />
+      );
+    },
+  };
 
   const columns = useMemo(
     () => [
       {
-        header: " ",
+        header: "Actions",
       },
       {
         accessorKey: 'firstName',
@@ -113,20 +113,15 @@ const RbEditableTable = () => {
         )
       },
       deleteRow: rowIndex => {
-        const newData = rowData.filter((row, index) => index !== rowIndex);
-        setRowData(newData);
+        const newData = data.filter((row, index) => index !== rowIndex);
+        setData(newData);
         return newData;
       },
       addNewRow: newRow => {
         setData(old => {
           const newData = [...old, newRow];
-          console.log("updated data===>", newData)
-          return newData;
-        });
-        setRowData(old => {
-          const newRowData = [...old, newRow];
-          console.log("updated rowData====>", newRowData)
-          return newRowData
+          console.log("updated rowData====>", newData)
+          return newData
         });
 
       }
@@ -137,7 +132,6 @@ const RbEditableTable = () => {
     setData(data);
   }, [data]);
 
-  const [rowData, setRowData] = useState(table.getRowModel().rows);
   const [formData, setFormData] = useState({ firstName: '', lastName: '', age: '', status: '', profileProgress: '', });
 
   const handleFormChange = (e) => {
@@ -194,8 +188,9 @@ const RbEditableTable = () => {
                   ))}
                 </thead>
                 <tbody>
-                  {rowData.map((row, index) => {
-                    return (
+                  {data.map((rowData, index) => {
+                    const row = table.getRow(index)
+                    return (row && (
                       <tr key={row.id}>
                         <td>
                           <span className="btn-group">
@@ -209,8 +204,6 @@ const RbEditableTable = () => {
                           </span>
                         </td>
                         {row.getVisibleCells().slice(1).map(cell => {
-                          console.log("Row:", row)
-                          console.log("row.getvisiblecells:", row.getVisibleCells())
                           return (
                             <td key={cell.id} className='hover-indicate'>
                               {flexRender(
@@ -221,10 +214,10 @@ const RbEditableTable = () => {
                           )
                         })}
                       </tr>
-                    )
+                    ))
                   })}
+                  {console.log("current data===>", data)}
                 </tbody>
-                {/* {console.log("current data===>", data, rowData)} */}
               </Table>
             </div>
             <Modal show={show} onHide={handleModal}>
@@ -232,24 +225,24 @@ const RbEditableTable = () => {
                 <Modal.Title>Add new row</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Form className='d-flex flex-column gap-2' onSubmit={handleFormSubmit}>
-                  <Form.Group controlId="exampleForm.ControlInput1">
+                <Form className='d-flex flex-column gap-2'>
+                  <Form.Group>
                     <Form.Label>First Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="firstName" value={formData.firstName} onChange={handleFormChange} autoFocus />
                   </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlInput2">
+                  <Form.Group>
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="lastName" value={formData.lastName} onChange={handleFormChange} />
                   </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlInput2">
+                  <Form.Group>
                     <Form.Label>Age</Form.Label>
                     <Form.Control type="number" placeholder="Enter value" name="age" value={formData.age} onChange={handleFormChange} />
                   </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlInput2">
+                  <Form.Group>
                     <Form.Label>Status</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="status" value={formData.status} onChange={handleFormChange} />
                   </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlInput2">
+                  <Form.Group>
                     <Form.Label>Profile progress</Form.Label>
                     <Form.Control type="number" placeholder="Enter value" name="profileProgress" value={formData.profileProgress} onChange={handleFormChange} />
                   </Form.Group>
@@ -309,205 +302,218 @@ import {
 import { makeData } from '../makeData';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 
-function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
-  const initialValue = getValue();
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = useState(initialValue);
-
-  // When the input is blurred, we'll call our table meta's updateData function
-  const onBlur = () => {
-    table.options.meta?.updateData(index, id, value);
-  };
-
-  // If the initialValue is changed external, sync it up with our state
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  return {
-    value,
-    setValue,
-    onBlur,
-  };
-}
-
-// Give our default column cell renderer editing superpowers!
-const defaultColumn = {
-  cell: function Cell(props) {
-    const { value, setValue, onBlur } = useDefaultColumn(props);
-
-    return (`}</code><code className="language-markup">{`
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={onBlur}
-      />`}</code><code className="language-javascript">{`
-    );
-  },
-};
-
 const RbEditableTable = (props) => {
 
-  return (
-  const columns = useMemo(
-    () => [
-      {
-        header: " ",
-      },
-      {
-        accessorKey: 'firstName',
-        header: "First Name",
-      },
-      {
-        accessorKey: 'lastName',
-        header: "Last Name",
-      },
-      {
-        accessorKey: 'age',
-        header: 'Age',
-      },
-      {
-        accessorKey: 'visits',
-        header: "Visits",
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-      },
-    ],
-    []
-  )
+  function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
+    const initialValue = getValue();
+    // We need to keep and update the state of the cell normally
+    const [value, setValue] = useState(initialValue);
 
-  const [data, setData] = React.useState(() => makeData(1000))
-  const refreshData = () => setData(() => makeData(1000))
+    // When the input is blurred, we'll call our table meta's updateData function
+    const onBlur = () => {
+      table.options.meta?.updateData(index, id, value);
+    };
 
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
+    // If the initialValue is changed external, sync it up with our state
+    useEffect(() => {
+      setValue(initialValue);
+    }, [initialValue]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    defaultColumn,
-    getCoreRowModel: getCoreRowModel(),
-    // Provide our updateData function to our table meta
-    meta: {
-      updateData: (rowIndex, columnId, value) => {
-        // Skip page index reset until after next rerender
-        setData(old =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex],
-                [columnId]: value
-              }
-            }
-            return row
-          })
-        )
-      }
+    return {
+      value,
+      setValue,
+      onBlur,
+    };
+  }
+
+  // Give our default column cell renderer editing superpowers!
+  const defaultColumn = {
+    cell: function Cell(props) {
+      const { value, setValue, onBlur } = useDefaultColumn(props);
+
+      return (`}</code><code className="language-markup">{`
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+        />`}</code><code className="language-javascript">{`
+      );
     },
-    debugTable: true
-  })
+  };
 
-  return (`}</code><code className="language-markup">{`
-    <>
-      <div className="demo-wrapper">
-        <div className="mb-1">
-          <h5> Editable / CRUD Table</h5>
-          <div className='mr-2'>
-            <div className='d-flex justify-content-between mb-1'>
-              <button className='btn btn-sm btn-primary' onClick={handleModal}>Add new row</button>
-            </div>
-            <div className="scrollable-vertical scrollable-horizontal">
-                <Table>
-                  <thead>
-                    {table.getHeaderGroups().map(headerGroup => (
-                      <tr key={headerGroup.id}>
-                        {headerGroup.headers.map(header => {
-                          return (
-                            <th key={header.id} colSpan={header.colSpan}>
-                              {header.isPlaceholder ? null : (
-                                <div>
-                                  {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                  )}
-                                  {header.column.getCanFilter() ? (
-                                    <div>
-                                      <Filter column={header.column} table={table} />
-                                    </div>
-                                  ) : null}
-                                </div>
-                              )}
-                            </th>
-                          )
-                        })}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map(row => {
-                      return (
-                        <tr key={row.id}>
-                          {row.getVisibleCells().map(cell => {
+  const useCellRef = () => {
+    const cellRef = useRef(null)
+    return cellRef;
+  }
+
+    return (
+      const columns = useMemo(
+        () => [
+          {
+            header: "Actions",
+          },
+          {
+            accessorKey: 'firstName',
+            header: "First Name",
+          },
+          {
+            accessorKey: 'lastName',
+            header: "Last Name",
+          },
+          {
+            accessorKey: 'age',
+            header: 'Age',
+          },
+          {
+            accessorKey: 'visits',
+            header: "Visits",
+          },
+          {
+            accessorKey: 'status',
+            header: 'Status',
+          },
+          {
+            accessorKey: 'progress',
+            header: 'Profile Progress',
+          },
+          {
+            accessorKey: 'createdAt',
+            header: 'Created At',
+          },
+        ],
+        []
+      )
+
+    const [data, setData] = useState(() => makeData(10))
+
+    const table = useReactTable({
+      data,
+      columns,
+      defaultColumn,
+      getCoreRowModel: getCoreRowModel(),
+      // Provide our updateData function to our table meta
+      meta: {
+        updateData: (rowIndex, columnId, value) => {
+          // Skip page index reset until after next rerender
+          setData(old =>
+            old.map((row, index) => {
+              if (index === rowIndex) {
+                return {
+                  ...old[rowIndex],
+                  [columnId]: value
+                }
+              }
+              return row
+            })
+          )
+        },
+        deleteRow: rowIndex => {
+          const newData = data.filter((row, index) => index !== rowIndex);
+          setData(newData);
+          return newData;
+        },
+        addNewRow: newRow => {
+          setData(old => {
+            const newData = [...old, newRow];
+            console.log("updated rowData====>", newData)
+            return newData
+          });
+        },
+      },
+    })
+
+    return (`}</code><code className="language-markup">{`
+      <>
+        <div className="demo-wrapper">
+          <div className="mb-1">
+            <h5> Editable / CRUD Table</h5>
+            <div className='mr-2'>
+              <div className='d-flex justify-content-between mb-1'>
+                <button className='btn btn-sm btn-primary' onClick={handleModal}>Add new row</button>
+              </div>
+              <div className="scrollable-vertical scrollable-horizontal">
+                  <Table>
+                    <thead>
+                      {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                          {headerGroup.headers.map(header => {
                             return (
-                              <td key={cell.id}>
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
+                              <th key={header.id} colSpan={header.colSpan}>
+                                {header.isPlaceholder ? null : (
+                                  <div>
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                                    {header.column.getCanFilter() ? (
+                                      <div>
+                                        <Filter column={header.column} table={table} />
+                                      </div>
+                                    ) : null}
+                                  </div>
                                 )}
-                              </td>
+                              </th>
                             )
                           })}
                         </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
+                      ))}
+                    </thead>
+                    <tbody>
+                      {table.getRowModel().rows.map(row => {
+                        return (
+                          <tr key={row.id}>
+                            {row.getVisibleCells().map(cell => {
+                              return (
+                                <td key={cell.id}>
+                                  {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                  )}
+                                </td>
+                              )
+                            })}
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </Table>
+                  </div>
+                  <Modal show={show} onHide={handleModal}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Add new row</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form className='d-flex flex-column gap-2'>
+                    <Form.Group>
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Control type="text" placeholder="Enter value" name="firstName" value={formData.firstName} onChange={handleFormChange} autoFocus />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control type="text" placeholder="Enter value" name="lastName" value={formData.lastName} onChange={handleFormChange} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Age</Form.Label>
+                      <Form.Control type="number" placeholder="Enter value" name="age" value={formData.age} onChange={handleFormChange} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Status</Form.Label>
+                      <Form.Control type="text" placeholder="Enter value" name="status" value={formData.status} onChange={handleFormChange} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Profile progress</Form.Label>
+                      <Form.Control type="number" placeholder="Enter value" name="profileProgress" value={formData.profileProgress} onChange={handleFormChange} />
+                    </Form.Group>
+                  </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleModal}>Cancel</Button>
+                      <Button variant="primary" onClick={handleFormSubmit}>Save changes</Button>
+                    </Modal.Footer>
+                  </Modal>
                 </div>
-                <Modal show={show} onHide={handleModal}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Add new row</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <Form className='d-flex flex-column gap-2' onSubmit={handleFormSubmit}>
-                      <Form.Group controlId="exampleForm.ControlInput1">
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter value" name="field1" onChange={handleFormChange} value={formData.field1} autoFocus />
-                      </Form.Group>
-                      <Form.Group controlId="exampleForm.ControlInput2">
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter value" />
-                      </Form.Group>
-                      <Form.Group controlId="exampleForm.ControlInput2">
-                        <Form.Label>Age</Form.Label>
-                        <Form.Control type="number" placeholder="Enter value" />
-                      </Form.Group>
-                      <Form.Group controlId="exampleForm.ControlInput2">
-                        <Form.Label>Status</Form.Label>
-                        <Form.Control type="text" placeholder="Enter value" />
-                      </Form.Group>
-                      <Form.Group controlId="exampleForm.ControlInput2">
-                        <Form.Label>Profile progress</Form.Label>
-                        <Form.Control type="number" placeholder="Enter value" />
-                      </Form.Group>
-                    </Form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleModal}>Cancel</Button>
-                    <Button variant="primary" onClick={handleModal}>Save changes</Button>
-                  </Modal.Footer>
-                </Modal>
               </div>
-            </div>
-          </div>`}</code><code className="language-javascript">{`
+            </div>`}</code><code className="language-javascript">{`
   );
 }
 
