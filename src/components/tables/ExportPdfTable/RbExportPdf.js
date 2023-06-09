@@ -125,13 +125,13 @@ function RbExportPdf() {
                             {table.getRowModel().rows.map(row => {
                                 return (
                                     <tr key={row.id}>
-                                        {row.getVisibleCells().map(cell => {
+                                        {row.getVisibleCells().map((cell, index) => {
                                             return (
-                                                <td key={cell.id} className='column-width'>
-                                                    {flexRender(
-                                                        cell.column.columnDef.cell,
-                                                        cell.getContext()
-                                                    )}
+                                                <td
+                                                    key={cell.id}
+                                                    className={index === row.getVisibleCells().length - 1 ? 'column-end-width' : 'column-width'}
+                                                >
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </td>
                                             )
                                         })}
