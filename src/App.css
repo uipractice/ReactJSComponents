@@ -65,9 +65,14 @@
   min-width: 15rem;
 }
 
-.hover-indicate :hover {
+.hover-indicate input {
   border: 1px solid var(--bs-gray) !important;
 }
+
+.hover-indicate:hover input {
+  border: 1px solid var(--bs-gray) !important;
+}
+
 
 .scrollable-horizontal {
   max-width: max-content;

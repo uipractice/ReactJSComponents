@@ -11,11 +11,6 @@ import { Button, Modal, Form, Table } from 'react-bootstrap';
 
 const RbEditableTable = () => {
 
-  const useCellRef = () => {
-    const cellRef = useRef(null)
-    return cellRef;
-  }
-
   function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
     const initialValue = getValue();
     // We need to keep and update the state of the cell normally
@@ -48,7 +43,6 @@ const RbEditableTable = () => {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
-          ref={useCellRef()}
         />
       );
     },
@@ -120,7 +114,6 @@ const RbEditableTable = () => {
       addNewRow: newRow => {
         setData(old => {
           const newData = [...old, newRow];
-          console.log("updated rowData====>", newData)
           return newData
         });
 
@@ -145,12 +138,12 @@ const RbEditableTable = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     table.options.meta.addNewRow({ id: Date.now(), ...formData });
-    console.log('handleFormSubmit called with formData:', formData);
     setFormData({});
     setShow(false);
   };
 
   const [show, setShow] = useState(false);
+  const [editingRowIndex, setEditingRowIndex] = useState(-1);
 
   const handleModal = () => {
     setShow(!show);
@@ -190,33 +183,42 @@ const RbEditableTable = () => {
                 <tbody>
                   {data.map((rowData, index) => {
                     const row = table.getRow(index)
-                    return (row && (
-                      <tr key={row.id}>
-                        <td>
-                          <span className="btn-group">
-                            <button className='btn btn-sm btn-outline-danger'
-                              onClick={() => {
-                                const newData = table.options.meta?.deleteRow(index);
-                                setData(newData);
-                              }}
-                            >Delete</button>
-                            <button className="btn btn-sm btn-outline-secondary edit-button">Edit</button>
-                          </span>
-                        </td>
-                        {row.getVisibleCells().slice(1).map(cell => {
-                          return (
-                            <td key={cell.id} className='hover-indicate'>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </td>
-                          )
-                        })}
-                      </tr>
-                    ))
+                    return (
+                      row && (
+                        <tr key={row.id}>
+                          <td>
+                            <span className="btn-group">
+                              <button
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => {
+                                  const newData = table.options.meta?.deleteRow(index);
+                                  setData(newData);
+                                }}
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-secondary edit-button"
+                                onClick={() => setEditingRowIndex(index)}
+                              >
+                                Edit
+                              </button>
+                            </span>
+                          </td>
+                          {row.getVisibleCells().slice(1).map(cell => {
+                            return (
+                              <td
+                                key={cell.id}
+                                className={index === editingRowIndex ? 'hover-indicate' : ''}
+                              >
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      )
+                    );
                   })}
-                  {console.log("current data===>", data)}
                 </tbody>
               </Table>
             </div>
@@ -341,11 +343,6 @@ const RbEditableTable = (props) => {
     },
   };
 
-  const useCellRef = () => {
-    const cellRef = useRef(null)
-    return cellRef;
-  }
-
     return (
       const columns = useMemo(
         () => [
@@ -464,7 +461,7 @@ const RbEditableTable = (props) => {
                           <tr key={row.id}>
                             {row.getVisibleCells().map(cell => {
                               return (
-                                <td key={cell.id}>
+                                <td key={cell.id} className={index === editingRowIndex ? 'hover-indicate' : ''}>
                                   {flexRender(
                                     cell.column.columnDef.cell,
                                     cell.getContext()
