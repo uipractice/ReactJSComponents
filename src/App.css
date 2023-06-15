@@ -65,9 +65,14 @@
   min-width: 15rem;
 }
 
-.hover-indicate :hover {
+.hover-indicate input {
   border: 1px solid var(--bs-gray) !important;
 }
+
+.hover-indicate:hover input {
+  border: 1px solid var(--bs-gray) !important;
+}
+
 
 .scrollable-horizontal {
   max-width: max-content;
@@ -89,13 +94,17 @@
   width: 22px;
 }
 
+.input-disabled {
+  background-color: #fff !important;
+  cursor: text;
+}
+
 .input-group>.form-control {
   min-width: 6rem !important;
 }
 
 .Example {
   background-color: #f5f5f5;
-  /* padding: 1.25rem; */
 }
 
 .Example input,
@@ -121,12 +130,4 @@
 
 .Example__container__load {
   margin-top: 1rem;
-}
-
-.Example__container__document {
-  /* margin: 1rem 0; */
-}
-
-.Example__container__document .react-pdf__message {
-  /* padding: 1.25rem; */
 }
