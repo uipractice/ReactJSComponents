@@ -55,6 +55,12 @@ import hovFilterIcon from '../images/hovFilterIcon.svg';
 import card from '../images/card.svg';
 import badgeIcon from '../images/badge.svg';
 import hovBadgeIcon from '../images/Badge_Hovered.svg';
+import exportExcelIcon from '../images/exportexcel.svg'
+import hovExportExcelIcon from '../images/exportexcelhover.svg'
+import exportPdfIcon from '../images/exportpdf.svg'
+import hovExportPdfIcon from '../images/exportpdfhover.svg'
+import pdfViewerIcon from '../images/pdfviewer.svg'
+import hovPdfViewerIcon from '../images/pdfviewerhover.svg'
 import './ComponentsGrid.css';
 
 function ComponenetsGrid() {
@@ -257,12 +263,20 @@ function ComponenetsGrid() {
           />
         </NavLink>
       </div>
-      <div className='component-grid-container'>
+      <div className='component-grid-container3'>
         <NavLink to='/pagination' className='navLink' activeClassName='navLinkActive' style={{ textDecoration: 'none' }}>
           <ComponentCard
             logoSrc={pagination}
             hovLogo={hovPagination}
             title='Pagination'
+            desc='The PDF Viewer component enables the user to view PDF files in the browser itself.'
+          />
+        </NavLink>
+        <NavLink to='/pdfviewer' className='navLink' activeClassName='navLinkActive' style={{ textDecoration: 'none' }}>
+          <ComponentCard
+            logoSrc={pdfViewerIcon}
+            hovLogo={hovPdfViewerIcon}
+            title='PDF Viewer'
             desc='A set of presentational components for building pagination UI,enables the user to select a specific page from a range of pages.'
           />
         </NavLink>
@@ -294,7 +308,7 @@ function ComponenetsGrid() {
           />
         </NavLink>
       </div>
-      <div className='component-grid-container3' style={{ marginBottom: '115px' }}>
+      <div className='component-grid-container3'>
         <NavLink to='/filtertable' className='navLink' activeClassName='navLinkActive' style={{ textDecoration: 'none' }}>
           <ComponentCard
             logoSrc={filterIcon}
@@ -317,6 +331,24 @@ function ComponenetsGrid() {
             hovLogo={hovSortableTable}
             title='Sortable Table'
             desc='Sortable Table Component, in which we can sort the column data on click of its column header.'
+          />
+        </NavLink>
+      </div>
+      <div className="component-grid-container2 mb-5">
+        <NavLink to='/exportexceltable' className='navLink' activeClassName='navLinkActive' style={{ textDecoration: 'none' }}>
+          <ComponentCard
+            logoSrc={exportExcelIcon}
+            hovLogo={hovExportExcelIcon}
+            title='Export Excel Table'
+            desc='The Export to Excel table component enables the user to export the table data to an Excel file.'
+          />
+        </NavLink>
+        <NavLink to='/exportpdftable' className='navLink' activeClassName='navLinkActive' style={{ textDecoration: 'none' }}>
+          <ComponentCard
+            logoSrc={exportPdfIcon}
+            hovLogo={hovExportPdfIcon}
+            title='Export PDF Table'
+            desc='The Export to PDF table component enables the user to export the table data to a PDF file.'
           />
         </NavLink>
       </div>

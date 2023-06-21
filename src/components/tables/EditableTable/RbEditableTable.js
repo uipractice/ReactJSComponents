@@ -327,14 +327,17 @@ import { Button, Modal, Form, Table } from 'react-bootstrap';
 
 const RbEditableTable = (props) => {
 
-  function useDefaultColumn({ getValue, row: { index }, column: { id }, table }) {
+  function useDefaultColumn({ getValue, row: { index }, column: { id }, table, isEditing }) {
     const initialValue = getValue();
     // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(initialValue);
 
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
-      table.options.meta?.updateData(index, id, value);
+
+      if (isEditing) {
+        table.options.meta?.updateData(index, id, value);
+      }
     };
 
     // If the initialValue is changed external, sync it up with our state
@@ -346,20 +349,24 @@ const RbEditableTable = (props) => {
       value,
       setValue,
       onBlur,
+      isEditing,
     };
   }
 
   // Give our default column cell renderer editing superpowers!
   const defaultColumn = {
     cell: function Cell(props) {
-      const { value, setValue, onBlur } = useDefaultColumn(props);
+      const { value, setValue, onBlur, isEditing } = useDefaultColumn(props);
 
       return (`}</code><code className="language-markup">{`
         <input
+          className='form-control form-control-sm input-disabled border-none column-width'
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
-        />`}</code><code className="language-javascript">{`
+          disabled={!isEditing}
+        />
+        `}</code><code className="language-javascript">{`
       );
     },
   };
@@ -482,12 +489,15 @@ const RbEditableTable = (props) => {
                           <tr key={row.id}>
                             {row.getVisibleCells().map(cell => {
                               return (
-                                <td key={cell.id} className={index === editingRowIndex ? 'hover-indicate' : ''}>
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext()
-                                  )}
-                                </td>
+                                <td
+                                key={cell.id}
+                                className={editableRows.includes(index) ? 'hover-indicate' : ''}
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  { ...cell.getContext(), isEditing: editableRows.includes(index) }
+                                )}
+                              </td>
                               )
                             })}
                           </tr>

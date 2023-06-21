@@ -15,7 +15,7 @@ function PdfViewerContainer() {
     return (
         <>
             <Header />
-            <AppBreadcrumbs compoName='Pagination' />
+            <AppBreadcrumbs compoName='PDF Viewer' />
             <div className={classes}>
                 <div className='side-bar'>
                     <SideBar onToggleSidebar={handleToggleSidebar} />
