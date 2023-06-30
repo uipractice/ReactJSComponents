@@ -82,10 +82,10 @@ export const MatSortableTable = () => {
 
   return (
     <div className="demo-wrapper">
-      <div style={{ marginBottom: "10px" }}>
+      <div className='mb-1'>
         Sorting functionality allows you to sort the data of the tables according to any specific columns.
       </div>
-      <div style={{ marginRight: "20px" }}>
+      <div className='mr-2'>
         <MaterialReactTable
           columns={columns}
           data={data}
@@ -95,10 +95,10 @@ export const MatSortableTable = () => {
           enableSorting={true}
           enableBottomToolbar={true}
           enableTopToolbar={false}
-          muiTableBodyRowProps={{ hover: false }}
-          muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
-          muiTableHeadRowProps={{ sx: { backgroundColor: '#01579b' } }}
-          muiTableHeadCellProps={{ sx: { color: "#fff" } }}
+        //   muiTableBodyRowProps={{ hover: false }}
+        //   muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
+        //   muiTableHeadRowProps={{ sx: { backgroundColor: '#01579b' } }}
+        // // muiTableHeadCellProps={{ sx: { color: "#fff" } }}
         />
       </div>
       <div className='compo-description'>

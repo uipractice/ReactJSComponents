@@ -140,3 +140,11 @@
 .Example__container__load {
   margin-top: 1rem;
 }
+
+.breadcrumb-item-custom-1+.breadcrumb-item-custom-1::before {
+  content: var(--bs-breadcrumb-divider, ">") !important;
+}
+
+.breadcrumb-item-custom-2+.breadcrumb-item-custom-2::before {
+  content: var(--bs-breadcrumb-divider, "-") !important;
+}
