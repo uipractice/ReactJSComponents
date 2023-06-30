@@ -73,16 +73,16 @@ export const RbFilterTable = () => {
         header: 'Profile Progress',
       },
       {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-      },
-      {
         accessorKey: 'state',
         header: 'State',
       },
       {
         accessorKey: 'company',
         header: 'Company',
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
       },
     ],
     []
@@ -133,33 +133,20 @@ export const RbFilterTable = () => {
                   <tr key={headerGroup.id} className='table-primary'>
                     {headerGroup.headers.map(header => {
                       return (
-                        <th key={header.id} colSpan={header.colSpan} className='column-width'>
-                          {header.isPlaceholder ? null : (
-                            <>
-                              <div
-                                {...{
-                                  className: header.column.getCanSort()
-                                    ? "cursor-pointer select-none"
-                                    : "",
-                                  onClick: header.column.getToggleSortingHandler()
-                                }}
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                                {{
-                                  asc: " 🔼",
-                                  desc: " 🔽"
-                                }[header.column.getIsSorted()] ?? null}
+                        <th key={header.id} colSpan={header.colSpan} >
+                          <div className='column-width-filtertable'>
+                            <div>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                            </div>
+                            {header.column.getCanFilter() ? (
+                              <div>
+                                <Filter column={header.column} table={table} />
                               </div>
-                              {header.column.getCanFilter() ? (
-                                <div className='column-width'>
-                                  <Filter column={header.column} table={table} />
-                                </div>
-                              ) : null}
-                            </>
-                          )}
+                            ) : null}
+                          </div>
                         </th>
                       )
                     })}
@@ -253,7 +240,7 @@ function Filter({ column, table }) {
   )
 
   return typeof firstValue === "number" ? (
-    <div className='input-group input-group-sm'>
+    <div className='input-group input-group-sm d-flex flex-row'>
       <DebouncedInput
         type="number"
         min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}

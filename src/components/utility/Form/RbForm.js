@@ -2,7 +2,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Prism from "prismjs";
 import "../../prism.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export const RbForm = (props) => {
 
@@ -10,6 +10,8 @@ export const RbForm = (props) => {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
+
+  const [isEmailValid, setIsEmailValid] = useState(false);
 
   return (
     <>
@@ -24,8 +26,7 @@ export const RbForm = (props) => {
               <Form.Control type="email" placeholder="Enter email"
                 onChange={(event) => {
                   const isValidEmail = validateEmail(event.target.value);
-                  const submitButton = document.querySelector('.btn-submit');
-                  submitButton.disabled = !isValidEmail;
+                  setIsEmailValid(isValidEmail);
                 }}
               />
               <Form.Text className="text-muted">
@@ -40,7 +41,11 @@ export const RbForm = (props) => {
             <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group>
-            <Button variant="primary" className='btn-submit' disabled >
+            <Button
+              variant="primary"
+              disabled={!isEmailValid}
+              className={isEmailValid ? 'btn-submit' : 'btn-custom-disabled'}
+            >
               Submit
             </Button>
           </Form>

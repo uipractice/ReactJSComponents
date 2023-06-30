@@ -44,6 +44,11 @@
   line-height: 22px !important;
 }
 
+.btn-custom-disabled {
+  background-color: var(--bs-gray) !important;
+  border-color: var(--bs-gray) !important;
+}
+
 .active.page-item a {
   background-color: #007bff !important;
   color: #fff !important;
@@ -58,7 +63,11 @@
 }
 
 .column-width {
-  min-width: max-content !important;
+  min-width: 9.125rem !important;
+}
+
+.column-width-filtertable {
+  min-width: max-content;
 }
 
 .column-end-width {
@@ -130,4 +139,12 @@
 
 .Example__container__load {
   margin-top: 1rem;
+}
+
+.breadcrumb-item-custom-1+.breadcrumb-item-custom-1::before {
+  content: var(--bs-breadcrumb-divider, ">") !important;
+}
+
+.breadcrumb-item-custom-2+.breadcrumb-item-custom-2::before {
+  content: var(--bs-breadcrumb-divider, "-") !important;
 }
