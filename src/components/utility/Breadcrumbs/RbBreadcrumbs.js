@@ -7,13 +7,28 @@ import '../../prism.css';
 function RbBreadcrumbs() {
   return (
     <div className='demo-wrapper'>
-      <div><strong>Simple Breadcrumbs</strong></div><br />
-      <Breadcrumb style={{ width: "80%" }}>
+      <div><strong>Simple Breadcrumbs</strong></div>
+      <Breadcrumb className='w-75'>
         <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
-          Library
-        </Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Library</Breadcrumb.Item>
         <Breadcrumb.Item active>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <div><strong>Clickable last breadcrumb</strong></div>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Breadcrumb.Item>Library</Breadcrumb.Item>
+        <Breadcrumb.Item>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <div><strong>Custom separators</strong></div>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-1'>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-1'>Library</Breadcrumb.Item>
+        <Breadcrumb.Item active className='breadcrumb-item-custom-1'>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-2'>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-2'>Library</Breadcrumb.Item>
+        <Breadcrumb.Item active className='breadcrumb-item-custom-2'>Data</Breadcrumb.Item>
       </Breadcrumb>
 
       <div className='compo-description'>
@@ -48,12 +63,27 @@ function RbBreadcrumbs() {
         <code className='language-markup'>{`
     <div className='demo-wrapper'>
       <div><strong>Simple Breadcrumbs</strong></div><br/>
-      <Breadcrumb style={{width: "80%"}}>
+      <Breadcrumb className='w-75'>
         <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
-          Library
-        </Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Library</Breadcrumb.Item>
         <Breadcrumb.Item active>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <div><strong>Clickable last breadcrumb</strong></div>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Breadcrumb.Item>Library</Breadcrumb.Item>
+        <Breadcrumb.Item>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <div><strong>Custom separators</strong></div>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-1'>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-1'>Library</Breadcrumb.Item>
+        <Breadcrumb.Item active className='breadcrumb-item-custom-1'>Data</Breadcrumb.Item>
+      </Breadcrumb>
+      <Breadcrumb className='w-75'>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-2'>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="#" className='breadcrumb-item-custom-2'>Library</Breadcrumb.Item>
+        <Breadcrumb.Item active className='breadcrumb-item-custom-2'>Data</Breadcrumb.Item>
       </Breadcrumb>
     </div>
     `}
