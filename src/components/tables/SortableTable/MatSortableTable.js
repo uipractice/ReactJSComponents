@@ -95,10 +95,10 @@ export const MatSortableTable = () => {
           enableSorting={true}
           enableBottomToolbar={true}
           enableTopToolbar={false}
-        //   muiTableBodyRowProps={{ hover: false }}
-        //   muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
-        //   muiTableHeadRowProps={{ sx: { backgroundColor: '#01579b' } }}
-        // // muiTableHeadCellProps={{ sx: { color: "#fff" } }}
+          muiTableBodyRowProps={{ hover: false }}
+          muiTablePaperProps={{ sx: { borderRadius: '8px' } }}
+          muiTableHeadRowProps={{ sx: { backgroundColor: '#01579b' } }}
+          muiTableHeadCellProps={{ sx: { color: "#fff" } }}
         />
       </div>
       <div className='compo-description'>
