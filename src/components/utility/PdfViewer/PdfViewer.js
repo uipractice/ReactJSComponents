@@ -16,8 +16,8 @@ const options = {
 }
 
 function PdfViewer() {
-    const [file, setFile] = useState("./sample.pdf")
-    const [numPages, setNumPages] = useState()
+    const [file, setFile] = useState("")
+    const [numPages, setNumPages] = useState(0)
 
     function onFileChange(event) {
         const { files } = event.target
