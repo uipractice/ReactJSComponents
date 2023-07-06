@@ -5,10 +5,7 @@ import "react-pdf/dist/esm/Page/TextLayer.css"
 import Prism from "prismjs";
 import "../../prism.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.min.js",
-    import.meta.url
-).toString()
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const options = {
     cMapUrl: "cmaps/",
@@ -16,7 +13,7 @@ const options = {
 }
 
 function PdfViewer() {
-    const [file, setFile] = useState("")
+    const [file, setFile] = useState("./sample.pdf")
     const [numPages, setNumPages] = useState(0)
 
     function onFileChange(event) {
