@@ -138,14 +138,16 @@ const RbEditableTable = () => {
     setData(data);
   }, [data]);
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     firstName: '',
     lastName: '',
     age: '',
     status: '',
     progress: '',
     visits: '',
-  });
+  }
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleClickEditRow = (index) => {
     if (editableRows.includes(index)) {
@@ -191,7 +193,7 @@ const RbEditableTable = () => {
       return;
     }
 
-    setFormData({});
+    setFormData(initialFormData);
     table.options.meta.addNewRow({ id: Date.now(), ...formData, createdAt: new Date() });
     setShow(false);
   };
