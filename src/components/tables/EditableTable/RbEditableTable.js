@@ -10,15 +10,20 @@ import { makeData } from '../makeData';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 
 const RbEditableTable = () => {
-
-  function useDefaultColumn({ getValue, row: { index }, column: { id }, table, isEditing }) {
+  function useDefaultColumn({
+    getValue,
+    row: { index },
+    column: { id },
+    table,
+    isEditing,
+  }) {
     const initialValue = getValue();
+
     // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(initialValue);
 
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
-
       if (isEditing) {
         table.options.meta?.updateData(index, id, value);
       }
@@ -40,6 +45,7 @@ const RbEditableTable = () => {
   const defaultColumn = {
     cell: function Cell(props) {
       const { value, setValue, onBlur, isEditing } = useDefaultColumn(props);
+
       return (
         <input
           className='form-control form-control-sm input-disabled border-none column-width'
@@ -89,8 +95,8 @@ const RbEditableTable = () => {
     []
   )
 
-  const [data, setData] = useState(() => makeData(10))
 
+  const [data, setData] = useState(() => makeData(10));
   const table = useReactTable({
     data,
     columns,
@@ -98,38 +104,48 @@ const RbEditableTable = () => {
     getCoreRowModel: getCoreRowModel(),
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        setData(old =>
+        setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
-                [columnId]: value
-              }
+
+                [columnId]: value,
+              };
             }
-            return row
+
+            return row;
           })
-        )
+        );
       },
-      deleteRow: rowIndex => {
+
+      deleteRow: (rowIndex) => {
         const newData = data.filter((row, index) => index !== rowIndex);
         setData(newData);
         return newData;
       },
-      addNewRow: newRow => {
-        setData(old => {
-          const newData = [...old, newRow];
-          return newData
-        });
 
-      }
+      addNewRow: (newRow) => {
+        setData((old) => {
+          const newData = [...old, newRow];
+          return newData;
+        });
+      },
     },
-  })
+  });
 
   useEffect(() => {
     setData(data);
   }, [data]);
 
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', age: '', status: '', profileProgress: '', });
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    age: '',
+    status: '',
+    progress: '',
+    visits: '',
+  });
 
   const handleClickEditRow = (index) => {
     if (editableRows.includes(index)) {
@@ -140,13 +156,15 @@ const RbEditableTable = () => {
   };
 
   const handleDeleteRow = (index) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this row?");
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this row?'
+    );
 
     if (isConfirmed) {
       const newData = table.options.meta?.deleteRow(index);
       setData(newData);
     }
-  }
+  };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -156,18 +174,38 @@ const RbEditableTable = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    table.options.meta.addNewRow({ id: Date.now(), ...formData });
-    setFormData({});
-    setShow(false);
-  };
-
   const [show, setShow] = useState(false);
   const [editableRows, setEditableRows] = useState([]);
 
   const handleModal = () => {
     setShow(!show);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    // Call the validateForm function and check if it returns false
+    if (!validateForm(formData)) {
+      // If it returns false, display an error message and return early
+      alert('Please fill in all fields or fill in NA if not available.');
+      return;
+    }
+
+    setFormData({});
+    table.options.meta.addNewRow({ id: Date.now(), ...formData, createdAt: new Date() });
+    setShow(false);
+  };
+
+  function validateForm(formData) {
+    // Check if any of the form fields are empty
+    for (const key in formData) {
+      if (formData[key] === '') {
+        // If a field is empty, return false
+        return false;
+      }
+    }
+    // If all fields are filled, return true
+    return true;
   }
 
   return (
@@ -215,6 +253,7 @@ const RbEditableTable = () => {
                               >
                                 Delete
                               </button>
+
                               <button
                                 className="btn btn-sm btn-outline-secondary edit-button"
                                 onClick={() => handleClickEditRow(index)}
@@ -253,24 +292,34 @@ const RbEditableTable = () => {
                     <Form.Label>First Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="firstName" value={formData.firstName} onChange={handleFormChange} autoFocus />
                   </Form.Group>
+
                   <Form.Group>
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="lastName" value={formData.lastName} onChange={handleFormChange} />
                   </Form.Group>
+
                   <Form.Group>
                     <Form.Label>Age</Form.Label>
                     <Form.Control type="number" placeholder="Enter value" name="age" value={formData.age} onChange={handleFormChange} />
                   </Form.Group>
+
                   <Form.Group>
                     <Form.Label>Status</Form.Label>
                     <Form.Control type="text" placeholder="Enter value" name="status" value={formData.status} onChange={handleFormChange} />
                   </Form.Group>
+
                   <Form.Group>
                     <Form.Label>Profile progress</Form.Label>
-                    <Form.Control type="number" placeholder="Enter value" name="profileProgress" value={formData.profileProgress} onChange={handleFormChange} />
+                    <Form.Control type="number" placeholder="Enter value" name="progress" value={formData.progress} onChange={handleFormChange} />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label>Visits</Form.Label>
+                    <Form.Control type="number" placeholder="Enter value" name="visits" value={formData.visits} onChange={handleFormChange} />
                   </Form.Group>
                 </Form>
               </Modal.Body>
+
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleModal}>Cancel</Button>
                 <Button variant="primary" onClick={handleFormSubmit}>Save changes</Button>
@@ -280,16 +329,20 @@ const RbEditableTable = () => {
 
           <div className="compo-description">
             <h4>Description</h4>
+
             <p>
               Editable Table Component, in which we can perform CRUD, Sort, Search
               & Filter, also provides pagination.
             </p>
+
             <h5>Steps</h5>
+
             <ul>
               <li>
                 <strong>Step 1 :</strong> Install Dependency to your project root
                 folder : <code>{`npm install @tanstack/react-table`}</code><br />
               </li>
+
               <li>
                 <strong>Step 2 :</strong> Import components, for Table:{" "}
                 <code>{`import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";`}</code><br />
@@ -309,6 +362,7 @@ const RbEditableTable = () => {
 
 const RbEditableTableCode = () => {
   useEffect(() => Prism.highlightAll(), []);
+
   return (
     <div className="jsx-code-wrapper">
       <h4>React Bootstrap code</h4>
@@ -447,6 +501,80 @@ const RbEditableTable = (props) => {
       },
     })
 
+    useEffect(() => {
+      setData(data);
+    }, [data]);
+  
+    const [formData, setFormData] = useState({
+      firstName: '',
+      lastName: '',
+      age: '',
+      status: '',
+      progress: '',
+      visits: '',
+    });
+  
+    const handleClickEditRow = (index) => {
+      if (editableRows.includes(index)) {
+        setEditableRows(editableRows.filter((i) => i !== index));
+      } else {
+        setEditableRows([...editableRows, index]);
+      }
+    };
+  
+    const handleDeleteRow = (index) => {
+      const isConfirmed = window.confirm(
+        'Are you sure you want to delete this row?'
+      );
+  
+      if (isConfirmed) {
+        const newData = table.options.meta?.deleteRow(index);
+        setData(newData);
+      }
+    };
+  
+    const handleFormChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    };
+  
+    const [show, setShow] = useState(false);
+    const [editableRows, setEditableRows] = useState([]);
+  
+    const handleModal = () => {
+      setShow(!show);
+    };
+  
+    const handleFormSubmit = (e) => {
+      e.preventDefault();
+  
+      // Call the validateForm function and check if it returns false
+      if (!validateForm(formData)) {
+        // If it returns false, display an error message and return early
+        alert('Please fill in all fields or fill in NA if not available.');
+        return;
+      }
+  
+      setFormData({});
+      table.options.meta.addNewRow({ id: Date.now(), ...formData, createdAt: new Date() });
+      setShow(false);
+    };
+  
+    function validateForm(formData) {
+      // Check if any of the form fields are empty
+      for (const key in formData) {
+        if (formData[key] === '') {
+          // If a field is empty, return false
+          return false;
+        }
+      }
+      // If all fields are filled, return true
+      return true;
+    }
+
     return (`}</code><code className="language-markup">{`
       <>
         <div className="demo-wrapper">
@@ -484,12 +612,12 @@ const RbEditableTable = (props) => {
                       ))}
                     </thead>
                     <tbody>
-                      {table.getRowModel().rows.map(row => {
-                        return (
-                          <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => {
-                              return (
-                                <td
+                    {table.getRowModel().rows.map(row => {
+                      return (
+                        <tr key={row.id}>
+                          {row.getVisibleCells().map(cell => {
+                            return (
+                              <td
                                 key={cell.id}
                                 className={editableRows.includes(index) ? 'hover-indicate' : ''}
                               >
@@ -498,14 +626,15 @@ const RbEditableTable = (props) => {
                                   { ...cell.getContext(), isEditing: editableRows.includes(index) }
                                 )}
                               </td>
-                              )
-                            })}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
+                            )
+                          })}
+                        </tr>
+                      )
+                    })}
+                  </tbody>
                   </Table>
                   </div>
+
                   <Modal show={show} onHide={handleModal}>
                     <Modal.Header closeButton>
                       <Modal.Title>Add new row</Modal.Title>
@@ -516,24 +645,42 @@ const RbEditableTable = (props) => {
                       <Form.Label>First Name</Form.Label>
                       <Form.Control type="text" placeholder="Enter value" name="firstName" value={formData.firstName} onChange={handleFormChange} autoFocus />
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label>Last Name</Form.Label>
                       <Form.Control type="text" placeholder="Enter value" name="lastName" value={formData.lastName} onChange={handleFormChange} />
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label>Age</Form.Label>
                       <Form.Control type="number" placeholder="Enter value" name="age" value={formData.age} onChange={handleFormChange} />
+
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label>Status</Form.Label>
                       <Form.Control type="text" placeholder="Enter value" name="status" value={formData.status} onChange={handleFormChange} />
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label>Profile progress</Form.Label>
-                      <Form.Control type="number" placeholder="Enter value" name="profileProgress" value={formData.profileProgress} onChange={handleFormChange} />
+                      <Form.Control type="number" placeholder="Enter value" name="progress" value={formData.progress} onChange={handleFormChange} />
                     </Form.Group>
+
+                    <Form.Group>
+                      <Form.Label>Visits</Form.Label>
+                      <Form.Control
+                        type='number'
+                        placeholder='visits'
+                        name='visits'
+                        value={formData.visits}
+                        onChange={handleFormChange}
+                      />
+                    </Form.Group>
+
                   </Form>
                     </Modal.Body>
+
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleModal}>Cancel</Button>
                       <Button variant="primary" onClick={handleFormSubmit}>Save changes</Button>
@@ -541,18 +688,20 @@ const RbEditableTable = (props) => {
                   </Modal>
                 </div>
               </div>
-            </div>`}</code><code className="language-javascript">{`
+            </div>`}</code>
+        <code className='language-javascript'>{`
   );
-}
 
-`}</code><code className="language-javascript">{`
+}
+`}</code>
+        <code className='language-javascript'>
+          {`
   );
 }
 
 export { RbEditableTable };
 
 <============makeData.js==================>
-
 import { faker } from "@faker-js/faker"
 
 const range = len => {
@@ -584,6 +733,10 @@ const newPerson = () => {
 export function makeData(...lens) {
     const makeDataLevel = (depth = 0) => {
         const len = lens[depth]
+
+
+
+
         return range(len).map(d => {
             return {
                 ...newPerson(),
@@ -591,14 +744,13 @@ export function makeData(...lens) {
             }
         })
     }
-
     return makeDataLevel()
 }
-
 `}
         </code>
       </pre>
     </div>
   );
 };
+
 export { RbEditableTable, RbEditableTableCode };
