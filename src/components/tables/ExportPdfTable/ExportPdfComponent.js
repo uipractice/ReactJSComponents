@@ -12,13 +12,13 @@ const ExportPdfComponent = (props) => {
     return (
         <div className="btnCompoWrap">
             <h3 className="btn-title">Export PDF Table</h3>
-            <ToggleView
-                onChange={(ev) =>
-                    ev === "react" ? setMatview(false) : setMatview(true)
-                }
-                isViewResized={props.isViewResized}
-            />
             <div className="step-tabs-wrapper">
+                <ToggleView
+                    onChange={(ev) =>
+                        ev === "react" ? setMatview(false) : setMatview(true)
+                    }
+                    isViewResized={props.isViewResized}
+                />
                 <Tabs defaultActiveKey="demo" id="code-demo-tab">
                     <Tab eventKey="demo" title="Demo">
                         {!matview ? <RbExportPdf /> : <MatExportPdf />}
