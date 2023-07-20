@@ -14,11 +14,11 @@ function BadgeComponent(props) {
   return (
     <div className='btnCompoWrap'>
       <h3 className='btn-title'>Badge</h3>
-      <ToggleView
-        onChange={handleChange}
-        isViewResized={props.isViewResized}
-      />
       <div className='step-tabs-wrapper'>
+        <ToggleView
+          onChange={handleChange}
+          isViewResized={props.isViewResized}
+        />
         <Tabs defaultActiveKey="demo" id="code-demo-tab">
           <Tab eventKey="demo" title="Demo">
             {!matview ? <RbBadge /> : <MatBadge />}

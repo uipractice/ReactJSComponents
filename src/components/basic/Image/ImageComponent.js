@@ -13,14 +13,14 @@ function ImageComponent(props) {
   return (
     <div className='btnCompoWrap'>
       <h3 className='btn-title'>Image</h3>
-      <ToggleView
-        onChange={handleChange}
-        isViewResized={props.isViewResized}
-      />
       <div className='step-tabs-wrapper'>
+        <ToggleView
+          onChange={handleChange}
+          isViewResized={props.isViewResized}
+        />
         <Tabs defaultActiveKey="demo" id="code-demo-tab">
           <Tab eventKey="demo" title="Demo">
-            {!matview ? <RbImage /> : <MatImage/>}
+            {!matview ? <RbImage /> : <MatImage />}
           </Tab>
           <Tab eventKey="code" title="Code">
             {!matview ? <RbImageCode /> : <MatImageCode />}

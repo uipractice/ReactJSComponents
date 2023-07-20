@@ -1,7 +1,7 @@
 .toggle-demo-sec {
   position: absolute;
-  right: 6.19%;
-  top: 25%;
+  right: 8px;
+  top: 6px;
 }
 
 .toggleView-btn {
@@ -18,7 +18,8 @@
   border: 1px solid #d7d7d9;
   border-color: #d7d7d9 !important;
 }
-.toggleView-btn.active{
+
+.toggleView-btn.active {
   background-color: #ff9b21 !important;
   color: #fff !important;
   box-shadow: none !important;
@@ -29,15 +30,17 @@
   height: 31px;
   padding: 4.6px 0 6px;
   float: left;
-  line-height: inherit!important;
+  line-height: inherit !important;
   border: 1px solid #d7d7d9;
   border-color: #d7d7d9 !important;
 }
-.toggleView-btn.focus{
+
+.toggleView-btn.focus {
   outline: none !important;
   border-color: #d7d7d9 !important;
   box-shadow: none !important;
 }
+
 .toggleAdjust {
   position: absolute;
   right: 22%;
