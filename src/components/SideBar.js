@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import SideBarToggle from './util/SideBarToggle';
 // eslint-disable-next-line
@@ -37,8 +37,34 @@ function SideBar(props) {
     setItem('isTableOpen', e.currentTarget.open);
   };
 
+  const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    const savedPosition = window.sessionStorage.getItem('sidebarScrollPosition');
+
+    if (savedPosition && sidebarRef.current) {
+      sidebarRef.current.scrollTop = savedPosition;
+    }
+
+    const currentRef = sidebarRef.current;
+
+    function handleScroll() {
+      window.sessionStorage.setItem('sidebarScrollPosition', currentRef.scrollTop);
+    }
+
+    if (currentRef) {
+      currentRef.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   return (
-    <div className="side-bar" style={{ marginBottom: `${3.5} rem !important` }}>
+    <div ref={sidebarRef} className="side-bar" style={{ marginBottom: `${3.5} rem !important` }}>
       <div className="rounded-0 side-section">
         <SideBarToggle onSidebarToggle={onToggleSidebar} />
         <div className="sidebar-body card-body">
